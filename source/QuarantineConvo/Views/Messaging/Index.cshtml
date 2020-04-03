@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "Messaging";
+}
+
+<div class="d-flex flex-column h-100 border-light border-left border-right mb-3"   id="messages-body">
+
+    <div class="border-bottom border-light">
+        <span class="text-center"> Talking to [Name] </span>
+    </div>
+
+    @* Messages box *@
+    <div class="flex-grow-1 messages m-1 p-4" style="background-color:whitesmoke">
+        
+    </div>
+
+    @* Input *@
+    <div class="mt-1">
+        <form class="form">
+            <div class="input-group">
+                <input class="form-control" placeholder="Message"/>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-info">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
