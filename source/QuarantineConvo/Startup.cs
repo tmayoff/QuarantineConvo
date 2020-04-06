@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using QuarantineConvo.Models;
+using QuarantineConvo.Data;
 
 namespace QuarantineConvo {
     public class Startup {
@@ -30,6 +31,9 @@ namespace QuarantineConvo {
             services.AddSignalR(options => {
                 //options.EnableDetailedErrors = true;
             });
+
+    services.AddDbContext<QuarantineConvoContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("QuarantineConvoContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
