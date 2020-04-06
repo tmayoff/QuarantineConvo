@@ -9,8 +9,8 @@ namespace QuarantineConvo.Models {
     public class User {
         
         [Required]
-        [Key]
         [StringLength(50)]
+        [Key]
         public string Username { get; set; }
         
         [Required]
@@ -24,16 +24,16 @@ namespace QuarantineConvo.Models {
         [RegularExpression("^[a-zA-Z]*$")]
         [DisplayName("Last name")]
         public string LastName { get; set; }
-        
-        [EmailAddress]
+
         [RegularExpression("[A-z]*[0-9]*@[A-z]+.[A-z]+")]
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         
-        [DataType(DataType.Password)]
+        
         [StringLength(50, MinimumLength = 6)]
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         public bool isAdmin { get; set; }
