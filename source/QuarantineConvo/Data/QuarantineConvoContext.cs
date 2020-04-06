@@ -15,5 +15,7 @@ namespace QuarantineConvo.Data
         }
 
         public DbSet<QuarantineConvo.Models.Interest> Interest { get; set; }
+
+        public DbSet<QuarantineConvo.Models.Connection> Connection { get; set; }
     }
 }
