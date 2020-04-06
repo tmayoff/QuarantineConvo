@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
 
@@ -13,6 +15,9 @@ namespace QuarantineConvo.Controllers
     public class UsersController : Controller
     {
         private readonly QuarantineConvoContext _context;
+
+        public const string SessionKeyName = "_Name";
+        public const string SessionKeyAge = "_Age";
 
         public UsersController(QuarantineConvoContext context)
         {
@@ -54,16 +59,40 @@ namespace QuarantineConvo.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Username,FirstName,LastName,Email,Password,isAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Username,FirstName,LastName,Email,Password")] User user, string confirmPass)
         {
-            if (ModelState.IsValid)
+            ViewData["ErrorMessage"] = "";
+            var acc = await _context.User
+            .FirstOrDefaultAsync(m => m.Username == user.Username);
+            if (acc == null)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if(user.Password != confirmPass)
+                {
+                    ViewData["ErrorMessage"] = "Error, the passwords must match.";
+                    return View(user);
+                }
+                else if (ModelState.IsValid)
+                {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    SetSession(user);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(user);
             }
-            return View(user);
+            else
+            {
+                ViewData["ErrorMessage"] = "Error, the username is already taken.";
+                user.Username = "";
+                return View(user);
+            }
         }
+
+        public void SetSession(User user)
+        {
+            HttpContext.Session.SetString(SessionKeyName, user.Username);
+        }
+
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(string id)
