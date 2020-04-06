@@ -12,5 +12,6 @@ namespace QuarantineConvo.Controllers
         {
             return View();
         }
+
     }
 }
