@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Messaging";
-    //if (Model?.user1 == null || Model?.user2 == null) { return; }
+    if (Model?.user1 == null || Model?.user2 == null) { return; }
 }
 
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
@@ -11,6 +11,7 @@
 
 <div class="row d-flex flex-grow-1">
     <div class="col"></div>
+
     <div class="col-8">
         <div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
 
@@ -37,5 +38,6 @@
             </div>
         </div>
     </div>
+    
     <div class="col"></div>
 </div>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using QuarantineConvo.Data;
+using QuarantineConvo.Models;
 
 namespace QuarantineConvo.Controllers {
     public class MessagingController : Controller {
@@ -15,7 +16,8 @@ namespace QuarantineConvo.Controllers {
         }
 
         public IActionResult Index() {
-            return View();
+            Connection c = db.Connection.FirstOrDefault();
+            return View(c);
         }
     }
 }
