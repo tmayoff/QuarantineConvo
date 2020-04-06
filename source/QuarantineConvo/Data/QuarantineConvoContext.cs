@@ -9,11 +9,13 @@ namespace QuarantineConvo.Data
 {
     public class QuarantineConvoContext : DbContext
     {
-        public QuarantineConvoContext (DbContextOptions<QuarantineConvoContext> options)
-            : base(options)
+        public QuarantineConvoContext (DbContextOptions<QuarantineConvoContext> options) : base(options)
         {
         }
 
         public DbSet<QuarantineConvo.Models.User> User { get; set; }
+
+        public DbSet<QuarantineConvo.Models.Connection> Connection { get; set; }
+
     }
 }
