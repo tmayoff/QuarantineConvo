@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace QuarantineConvo.Models {
     public class User {
-
+        
         [Required]
         [Key]
+        [StringLength(50)]
         public string Username { get; set; }
         
         [Required]
