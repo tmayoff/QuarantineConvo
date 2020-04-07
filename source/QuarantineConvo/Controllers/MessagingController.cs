@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
@@ -24,19 +25,13 @@ namespace QuarantineConvo.Controllers
         }
 
         [Authorize]
-        public IActionResult Index() {
-
-            string currentUser = User.Identity.Name;
-            Connection c = db.Connection.Where(c => c.user1 == currentUser || c.user2 == currentUser).FirstOrDefault();
-
-            List<Message> messages = db.Message.Where(m => m.Connection.ID == c.ID).ToList();
-            ViewData["messages"] = messages;
-            return View(c);
-        }
-
-        public IActionResult Conversation(Connection connection)
+        [HttpGet]
+        public IActionResult Index(int connectionId)
         {
-            return View("Index", connection);
+            Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
+            List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
+            ViewData["messages"] = messages;
+            return View(connection);
         }
 
         public IActionResult FindConnection(string message)
@@ -72,19 +67,21 @@ namespace QuarantineConvo.Controllers
 
             else
             {
-                Connection connection = new Connection()
+                Connection theConnection = new Connection()
                 {
                     user1 = currentUser,
                     user2 = foundUser.Username,
                     active = true
                 };
 
-                db.Connection.Add(connection);
+                db.Connection.Add(theConnection);
                 db.SearchRequest.RemoveRange(db.SearchRequest.Where(r => r.Username == currentUser));
                 db.SearchRequest.RemoveRange(db.SearchRequest.Where(r => r.Username == foundUser.Username));
                 db.SaveChanges();
 
-                return RedirectToAction("Conversation", new { connection = connection });
+                theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
+
+                return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
         }
 
