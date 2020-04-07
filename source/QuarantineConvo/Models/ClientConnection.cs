@@ -5,17 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuarantineConvo.Models {
-    public class Message {
+    public class ClientConnection {
 
         [Key]
         public int ID { get; set; }
 
-        public DateTime TimeStamp { get; set; }
+        public string UserName { get; set; }
 
-        public Connection Connection { get; set; }
+        public string UserID { get; set; }
 
-        public string SentBy { get; set; }
-
-        public string Msg { get; set; }
+        public string ConnectionID { get; set; }
     }
 }

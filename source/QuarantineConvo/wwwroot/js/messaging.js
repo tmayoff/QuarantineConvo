@@ -18,38 +18,69 @@ $(document).ready(() => {
         return false;
     })
 
-    connection.on("ReceiveMessage", (user, message) => {
-        ReceiveMessage(user, message);
-    })
+    connection.on("ReceiveMessage", (message) => {
+        console.log("RECEIVING");
+        ReceiveMessage(message);
+    });
 
+    UpdateScroll();
+
+    // Functions
     function SendMessage() {
         if (!connectionEstablished) return;
 
+        var connectionID = $("#connection-id").val();
+        if (connectionID == "") return;
         var message = $("#message").val();
         if (message == "") return;
 
-        // TODO change this to server side
-        var user = $("#user").val();
+        // Send the message
+        connection.invoke("SendMessage", connectionID, message).then(() => {
+            // Add to view
+            var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            var encodedMsg = msg;
 
-        connection.invoke("SendMessage", user, message)
+            // Create the message element
+            let li = document.createElement("li");
+            li.setAttribute("class", "message-right mb-3");
+            let span = document.createElement("span");
+            span.setAttribute("class", "shadow-sm");
+            span.textContent = encodedMsg;
+            li.appendChild(span);
+
+            document.getElementById("messages-list").appendChild(li);
+
+            $("#message").val("");
+            UpdateScroll();
+        })
             .catch((err) => {
                 return console.error(err.toString());
             });
+
     }
 
-    function ReceiveMessage(user, message) {
+    function ReceiveMessage(message) {
+        console.log("RECEIVING");
+
         // Clean the message of dangerous strings
         var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        var encodedMsg = user + ": " + msg;
+        var encodedMsg = msg;
 
         // Create the message element
-        var li = document.createElement("li");
-        li.setAttribute("class", "message-right mb-3");
-        var span = document.createElement("span");
+        let li = document.createElement("li");
+        li.setAttribute("class", "message-left mb-3");
+        let span = document.createElement("span");
         span.setAttribute("class", "shadow-sm");
         span.textContent = encodedMsg;
         li.appendChild(span);
 
         document.getElementById("messages-list").appendChild(li);
+
+        UpdateScroll();
+    }
+
+    function UpdateScroll() {
+        let messageScroll = document.getElementById("message-scroll");
+        messageScroll.scrollTop = messageScroll.scrollHeight;
     }
 })
