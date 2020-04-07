@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Interest>
+@{
+    ViewData["Title"] = "Find A Connection";
+}
+
+    <div class="container">
+
+        <div class="p-5 text-center">
+            <h1>Trying to find that connection you long-for?</h1>
+            <h2>We've got you covered!</h2>
+            <br />
+            <h5>Pick from among the list of interests the ones that you wish to talk about and we will get you connected to another person somewhere in this world that is looking for the same conversation. :)</h5>
+        </div>
+
+        @using (Html.BeginForm("Search", "Messaging"))
+        {
+            <form method="post">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Search  For</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (Interest interest in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <input name="interestCheckboxes" type="checkbox" value="@interest.Name" />
+                                </td>
+
+                                <td>@interest.Name</td>
+                                <td>@interest.Description</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+                <input type="submit" />
+
+            </form>
+        }
+
+
+
+    </div>
