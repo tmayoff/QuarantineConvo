@@ -19,29 +19,10 @@ namespace QuarantineConvo.Services
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            return Execute(Options.SendGridKey, subject, message, email);
+            return Execute(subject, message, email);
         }
 
-        //public Task Execute(string apiKey, string subject, string message, string email)
-        //{
-        //    var client = new SendGridClient(apiKey);
-        //    var msg = new SendGridMessage()
-        //    {
-        //        From = new EmailAddress("dummySimon99@gmail.com", Options.SendGridUser),
-        //        Subject = subject,
-        //        PlainTextContent = message,
-        //        HtmlContent = message
-        //    };
-        //    msg.AddTo(new EmailAddress(email));
-
-        //    // Disable click tracking.
-        //    // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
-        //    msg.SetClickTracking(false, false);
-
-        //    return client.SendEmailAsync(msg);
-        //}
-
-        public Task Execute(string apiKey, string subject, string message, string email)
+        public Task Execute(string subject, string message, string email)
         {
             var theMessage = new MimeMessage();
             theMessage.From.Add(new MailboxAddress("Quarantine Convo", "dummysimon99@gmail.com"));
@@ -61,8 +42,10 @@ namespace QuarantineConvo.Services
             client.Send(theMessage);
             client.Disconnect(true);
 
-            //not good down there, but need it for function to work
-            var dummyClient = new SendGridClient(apiKey);
+            //just to make the function happy, gets the return value it wants
+            //wont do anything because the api key is wrong
+            string fakeKey = "aaa";
+            var dummyClient = new SendGridClient(fakeKey);
             var msg = new SendGridMessage();
             return dummyClient.SendEmailAsync(msg);
 
