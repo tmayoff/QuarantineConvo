@@ -16,7 +16,12 @@
         <div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
 
             <div class="border-bottom border-light">
-                <span class="text-center">Talking to </span>
+                @if (ViewData["currentUser"].ToString() == Model.user1) {
+                    <span class="text-center">Talking to @Model.user2</span>
+                }
+                else {
+                    <span class="text-center">Talking to @Model.user1</span>
+                }
             </div>
 
             @* messages box *@
@@ -27,7 +32,7 @@
             @* input *@
             <div class="mt-1 mb-3 ">
                 <form id="message-form">
-                    <input id="user" />
+
                     <div class="input-group">
                         <input class="form-control" placeholder="message" id="message" />
                         <div class="input-group-append">

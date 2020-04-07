@@ -17,7 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 using QuarantineConvo.Models;
 using QuarantineConvo.Data;
 using Microsoft.AspNetCore.Identity;
-using QuarantineConvo.Areas.Identity.Data;
 
 namespace QuarantineConvo {
     public class Startup {
@@ -38,6 +37,8 @@ namespace QuarantineConvo {
                 options.UseSqlServer(Configuration.GetConnectionString("QuarantineConvoContext")));
 
             services.AddSession();
+
+            services.AddRazorPages();
 
             services.AddDistributedMemoryCache();
             services.AddSession(options => {

@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using QuarantineConvo.Areas.Identity.Data;
+using QuarantineConvo.Data;
+using QuarantineConvo.Models;
 
 [assembly: HostingStartup(typeof(QuarantineConvo.Areas.Identity.IdentityHostingStartup))]
 namespace QuarantineConvo.Areas.Identity
@@ -15,14 +16,12 @@ namespace QuarantineConvo.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<QuarantineConvoIdentityDbContext>(options =>
+                services.AddDbContext<QuarantineConvoIdentityContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("QuarantineConvoIdentityDbContextConnection")));
+                        context.Configuration.GetConnectionString("QuarantineConvoIdentityContextConnection")));
 
-                services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultUI().AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<QuarantineConvoIdentityDbContext>();
-                //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                //    .AddEntityFrameworkStores<QuarantineConvoIdentityDbContext>();
+                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<QuarantineConvoIdentityContext>();
             });
         }
     }
