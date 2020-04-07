@@ -20,7 +20,9 @@ $(document).ready(() => {
 
     connection.on("ReceiveMessage", (user, message) => {
         ReceiveMessage(user, message);
-    })
+    });
+
+    UpdateScroll();
 
     // Functions
     function SendMessage() {
@@ -69,5 +71,11 @@ $(document).ready(() => {
         li.appendChild(span);
 
         document.getElementById("messages-list").appendChild(li);
+    }
+
+    function UpdateScroll() {
+        console.log("Scrolling")
+        let messageScroll = document.getElementById("message-scroll");
+        messageScroll.scrollTop = messageScroll.scrollHeight;
     }
 })
