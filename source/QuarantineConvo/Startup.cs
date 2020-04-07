@@ -16,6 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using QuarantineConvo.Models;
 using QuarantineConvo.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using QuarantineConvo.Services;
 
 namespace QuarantineConvo {
     public class Startup {
@@ -32,20 +35,23 @@ namespace QuarantineConvo {
                 //options.EnableDetailedErrors = true;
             });
 
+            
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+
             services.AddDbContext<QuarantineConvoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("QuarantineConvoContext")));
 
-            services.AddDistributedMemoryCache();
+            services.AddSession();
 
-            services.AddSession(options =>
-            {
+            services.AddRazorPages();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,18 +66,23 @@ namespace QuarantineConvo {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints => {
-                endpoints.MapHub<ConnectionHub>("/messaging-hub");
+                endpoints.MapHub<ConnectionHub>("/messaging-hub");    
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
