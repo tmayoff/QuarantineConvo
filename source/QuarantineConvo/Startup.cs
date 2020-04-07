@@ -30,7 +30,7 @@ namespace QuarantineConvo {
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllersWithViews();
             services.AddSignalR(options => {
-                //options.EnableDetailedErrors = true;
+                options.EnableDetailedErrors = true;
             });
 
             services.AddDbContext<QuarantineConvoContext>(options =>

@@ -16,7 +16,7 @@
         <div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
 
             <div class="border-bottom border-light">
-                @if (ViewData["currentUser"].ToString() == Model.user1) {
+                @if (User.Identity.Name == Model.user1) {
                     <span class="text-center">Talking to @Model.user2</span>
                 }
                 else {
@@ -26,7 +26,20 @@
 
             @* messages box *@
             <div class="flex-grow-1 messages m-1 p-4">
-                <ul id="messages-list"></ul>
+                <ul id="messages-list">
+                    @foreach (var msg in (List<Message>)ViewData["messages"]) {
+                        if (msg.SentBy == User.Identity.Name) {
+                            <li class="message-right mb-3">
+                                <span class="shadow-sm">@msg.Msg</span>
+                            </li>
+                        }
+                        else {
+                            <li class="message-left mb-3">
+                                <span class="shadow-sm">@msg.Msg</span>
+                            </li>
+                        }
+                    }
+                </ul>
             </div>
 
             @* input *@
@@ -34,7 +47,8 @@
                 <form id="message-form">
 
                     <div class="input-group">
-                        <input class="form-control" placeholder="message" id="message" />
+                        <input id="connection-id" value="@Model.ID" type="hidden"/>
+                        <textarea class="form-control" placeholder="message" id="message"></textarea>
                         <div class="input-group-append">
                             <button class="btn btn-outline-info" id="sendbtn">Send</button>
                         </div>

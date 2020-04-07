@@ -13,7 +13,5 @@ namespace QuarantineConvo.Data {
         public DbSet<QuarantineConvo.Models.Connection> Connection { get; set; }
 
         public DbSet<QuarantineConvo.Models.Message> Message { get; set; }
-
-        public DbSet<QuarantineConvo.Models.User> User { get; set; }
     }
 }

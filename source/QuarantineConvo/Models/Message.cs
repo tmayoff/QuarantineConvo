@@ -14,7 +14,7 @@ namespace QuarantineConvo.Models {
 
         public Connection Connection { get; set; }
 
-        public User SentBy { get; set; }
+        public string SentBy { get; set; }
 
         public string Msg { get; set; }
     }
