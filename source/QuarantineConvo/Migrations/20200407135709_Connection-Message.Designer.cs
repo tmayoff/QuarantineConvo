@@ -10,8 +10,8 @@ using QuarantineConvo.Data;
 namespace QuarantineConvo.Migrations
 {
     [DbContext(typeof(QuarantineConvoContext))]
-    [Migration("20200406174925_Messages")]
-    partial class Messages
+    [Migration("20200407135709_Connection-Message")]
+    partial class ConnectionMessage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,23 +28,16 @@ namespace QuarantineConvo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConnectionID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("user1Username")
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("user1")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("user2Username")
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("user2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("user1Username");
-
-                    b.HasIndex("user2Username");
 
                     b.ToTable("Connection");
                 });
@@ -62,8 +55,8 @@ namespace QuarantineConvo.Migrations
                     b.Property<string>("Msg")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SentByUsername")
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("SentById")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
@@ -72,20 +65,27 @@ namespace QuarantineConvo.Migrations
 
                     b.HasIndex("ConnectionID");
 
-                    b.HasIndex("SentByUsername");
+                    b.HasIndex("SentById");
 
                     b.ToTable("Message");
                 });
 
             modelBuilder.Entity("QuarantineConvo.Models.User", b =>
                 {
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -97,28 +97,42 @@ namespace QuarantineConvo.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAdmin")
                         .HasColumnType("bit");
 
-                    b.HasKey("Username");
+                    b.HasKey("Id");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("QuarantineConvo.Models.Connection", b =>
-                {
-                    b.HasOne("QuarantineConvo.Models.User", "user1")
-                        .WithMany()
-                        .HasForeignKey("user1Username");
-
-                    b.HasOne("QuarantineConvo.Models.User", "user2")
-                        .WithMany()
-                        .HasForeignKey("user2Username");
                 });
 
             modelBuilder.Entity("QuarantineConvo.Models.Message", b =>
@@ -129,7 +143,7 @@ namespace QuarantineConvo.Migrations
 
                     b.HasOne("QuarantineConvo.Models.User", "SentBy")
                         .WithMany()
-                        .HasForeignKey("SentByUsername");
+                        .HasForeignKey("SentById");
                 });
 #pragma warning restore 612, 618
         }

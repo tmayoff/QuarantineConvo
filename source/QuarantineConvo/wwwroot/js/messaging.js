@@ -48,13 +48,10 @@ $(document).ready(() => {
             document.getElementById("messages-list").appendChild(li);
 
             $("#message").val("");
-
         })
         .catch((err) => {
             return console.error(err.toString());
         });
-
-        
     }
 
     function ReceiveMessage(message) {
