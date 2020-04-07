@@ -36,7 +36,7 @@ namespace QuarantineConvo.Controllers
             return View("Index", connection);
         }
 
-        public IActionResult FindConnection()
+        public IActionResult FindConnection(string message)
         {
             var interests = db.Interest.ToList();
 
@@ -44,7 +44,7 @@ namespace QuarantineConvo.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(List<string> interestCheckboxes)
+        public ActionResult Search(List<string> interestCheckboxes)
         {
             string currentUser    = User.Identity.Name;
             long currentInterests = GetInterests(interestCheckboxes);
@@ -55,26 +55,34 @@ namespace QuarantineConvo.Controllers
                 Interests = currentInterests
             };
 
-            searchRequests.Add(request);
-
-            string foundUser = GetCommonInterest(currentUser, currentInterests);
-
-            if (string.IsNullOrEmpty(foundUser))
-                return FindConnection();
-
-            Connection connection = new Connection()
-            {
-                user1  = currentUser,
-                user2  = foundUser,
-                active = true
-            };
-
-            db.Connection.Add(connection);
+            db.SearchRequest.Add(request);
             db.SaveChanges();
 
-            searchRequests.Remove(request);
+            searchRequests.Add(request);
 
-            return Conversation(connection);
+            SearchRequest foundUser = db.SearchRequest.FirstOrDefault(r => (r.Interests & currentInterests) != 0 && r.Username != currentUser);
+
+            if (null == foundUser)
+            {
+                return RedirectToAction("FindConnection");
+            }
+
+            else
+            {
+                Connection connection = new Connection()
+                {
+                    user1 = currentUser,
+                    user2 = foundUser.Username,
+                    active = true
+                };
+
+                db.Connection.Add(connection);
+                db.SearchRequest.RemoveRange(db.SearchRequest.Where(r => r.Username == currentUser));
+                db.SearchRequest.RemoveRange(db.SearchRequest.Where(r => r.Username == foundUser.Username));
+                db.SaveChanges();
+
+                return RedirectToAction("Conversation", new { connection = connection });
+            }
         }
 
         private long GetInterests(List<string> interestCheckboxes)
@@ -90,31 +98,6 @@ namespace QuarantineConvo.Controllers
             }
 
             return interests;
-        }
-
-        private string GetCommonInterest(string searchingUser, long searchingInterests)
-        {
-            bool stillSearching = true;
-            int timeOutCounter  = 0;
-            int timeOut         = 1000000;
-
-            SearchRequest userFound = null;
-
-
-            while (stillSearching)
-            {
-                //timeOutCounter++;
-
-                if (timeOutCounter >= timeOut)
-                    return string.Empty;
-
-                userFound = searchRequests.FirstOrDefault(r => (r.Interests & searchingInterests) != 0 && r.Username != searchingUser);
-
-                if (userFound != null)
-                    stillSearching = false;
-            }
-
-            return userFound.Username;
         }
     }
 }

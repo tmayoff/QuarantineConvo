@@ -21,5 +21,7 @@ namespace QuarantineConvo.Data
         public DbSet<QuarantineConvo.Models.Message> Message { get; set; }
 
         public DbSet<QuarantineConvo.Models.User> User { get; set; }
+
+        public DbSet<QuarantineConvo.Models.SearchRequest> SearchRequest { get; set; }
     }
 }
