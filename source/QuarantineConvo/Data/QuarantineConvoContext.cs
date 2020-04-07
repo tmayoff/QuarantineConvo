@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using QuarantineConvo.Models;
 
-namespace QuarantineConvo.Data
-{
-    public class QuarantineConvoContext : DbContext
-    {
-        public QuarantineConvoContext (DbContextOptions<QuarantineConvoContext> options)
-            : base(options)
-        {
+namespace QuarantineConvo.Data {
+    public class QuarantineConvoContext : DbContext {
+        public QuarantineConvoContext(DbContextOptions<QuarantineConvoContext> options)
+            : base(options) {
         }
 
         public DbSet<QuarantineConvo.Models.Interest> Interest { get; set; }
@@ -23,5 +20,7 @@ namespace QuarantineConvo.Data
         public DbSet<QuarantineConvo.Models.User> User { get; set; }
 
         public DbSet<QuarantineConvo.Models.SearchRequest> SearchRequest { get; set; }
+
+        public DbSet<QuarantineConvo.Models.ClientConnection> ClientConnection { get; set; }
     }
 }

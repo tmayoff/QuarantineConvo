@@ -18,8 +18,9 @@ $(document).ready(() => {
         return false;
     })
 
-    connection.on("ReceiveMessage", (user, message) => {
-        ReceiveMessage(user, message);
+    connection.on("ReceiveMessage", (message) => {
+        console.log("RECEIVING");
+        ReceiveMessage(message);
     });
 
     UpdateScroll();
@@ -50,13 +51,16 @@ $(document).ready(() => {
             document.getElementById("messages-list").appendChild(li);
 
             $("#message").val("");
+            UpdateScroll();
         })
-        .catch((err) => {
-            return console.error(err.toString());
-        });
+            .catch((err) => {
+                return console.error(err.toString());
+            });
+
     }
 
     function ReceiveMessage(message) {
+        console.log("RECEIVING");
 
         // Clean the message of dangerous strings
         var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -71,10 +75,11 @@ $(document).ready(() => {
         li.appendChild(span);
 
         document.getElementById("messages-list").appendChild(li);
+
+        UpdateScroll();
     }
 
     function UpdateScroll() {
-        console.log("Scrolling")
         let messageScroll = document.getElementById("message-scroll");
         messageScroll.scrollTop = messageScroll.scrollHeight;
     }

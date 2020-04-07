@@ -11,44 +11,37 @@ using Microsoft.EntityFrameworkCore;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
 
-namespace QuarantineConvo.Controllers
-{
-    public class MessagingController : Controller
-    {
+namespace QuarantineConvo.Controllers {
+    public class MessagingController : Controller {
 
         private readonly QuarantineConvoContext db;
         private List<SearchRequest> searchRequests = new List<SearchRequest>();
 
-        public MessagingController(QuarantineConvoContext context)
-        {
+        public MessagingController(QuarantineConvoContext context) {
             db = context;
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index(int connectionId)
-        {
+        public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
             ViewData["messages"] = messages;
             return View(connection);
         }
 
-        public IActionResult FindConnection(string message)
-        {
+        public IActionResult FindConnection(string message) {
             var interests = db.Interest.ToList();
 
             return View(interests);
         }
 
         [HttpPost]
-        public ActionResult Search(List<string> interestCheckboxes)
-        {
-            string currentUser    = User.Identity.Name;
+        public ActionResult Search(List<string> interestCheckboxes) {
+            string currentUser = User.Identity.Name;
             long currentInterests = GetInterests(interestCheckboxes);
 
-            SearchRequest request = new SearchRequest()
-            {
+            SearchRequest request = new SearchRequest() {
                 Username = currentUser,
                 Interests = currentInterests
             };
@@ -60,15 +53,12 @@ namespace QuarantineConvo.Controllers
 
             SearchRequest foundUser = db.SearchRequest.FirstOrDefault(r => (r.Interests & currentInterests) != 0 && r.Username != currentUser);
 
-            if (null == foundUser)
-            {
+            if (null == foundUser) {
                 return RedirectToAction("FindConnection");
             }
 
-            else
-            {
-                Connection theConnection = new Connection()
-                {
+            else {
+                Connection theConnection = new Connection() {
                     user1 = currentUser,
                     user2 = foundUser.Username,
                     active = true
@@ -85,12 +75,10 @@ namespace QuarantineConvo.Controllers
             }
         }
 
-        private long GetInterests(List<string> interestCheckboxes)
-        {
+        private long GetInterests(List<string> interestCheckboxes) {
             long interests = 0;
 
-            foreach (Interest interest in db.Interest)
-            {
+            foreach (Interest interest in db.Interest) {
                 interests <<= 1;
 
                 if (interestCheckboxes.Contains(interest.Name))

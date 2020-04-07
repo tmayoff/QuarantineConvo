@@ -34,7 +34,6 @@ namespace QuarantineConvo {
             services.AddSignalR(options => {
                 options.EnableDetailedErrors = true;
             });
-
             
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
