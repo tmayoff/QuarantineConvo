@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using QuarantineConvo.Models;
 using QuarantineConvo.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using QuarantineConvo.Services;
 
 namespace QuarantineConvo {
     public class Startup {
@@ -32,6 +34,10 @@ namespace QuarantineConvo {
             services.AddSignalR(options => {
                 //options.EnableDetailedErrors = true;
             });
+
+            
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddDbContext<QuarantineConvoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("QuarantineConvoContext")));
