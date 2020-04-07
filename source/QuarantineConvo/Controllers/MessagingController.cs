@@ -20,9 +20,9 @@ namespace QuarantineConvo.Controllers
             db = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
+        public IActionResult Index() {
+            Connection c = db.Connection.FirstOrDefault();
+            return View(c);
         }
 
         public IActionResult FindConnection()

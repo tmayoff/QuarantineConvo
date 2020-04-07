@@ -1,32 +1,43 @@
-﻿
+﻿@model Connection
+
 @{
     ViewData["Title"] = "Messaging";
+    if (Model?.user1 == null || Model?.user2 == null) { return; }
 }
 
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script src="~/js/messaging.js"></script>
 
-<div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
 
-    <div class="border-bottom border-light">
-        <span class="text-center"> Talking to [Name] </span>
-    </div>
+<div class="row d-flex flex-grow-1">
+    <div class="col"></div>
 
-    @* Messages box *@
-    <div class="flex-grow-1 messages m-1 p-4">
-        <ul id="messages-list"></ul>
-    </div>
+    <div class="col-8">
+        <div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
 
-    @* Input *@
-    <div class="mt-1 mb-3 ">
-        <form id="message-form">
-            <input id="user" />
-            <div class="input-group">
-                <input class="form-control" placeholder="Message" id="message" />
-                <div class="input-group-append">
-                    <button class="btn btn-outline-info" id="sendBtn">Send</button>
-                </div>
+            <div class="border-bottom border-light">
+                <span class="text-center">Talking to </span>
             </div>
-        </form>
+
+            @* messages box *@
+            <div class="flex-grow-1 messages m-1 p-4">
+                <ul id="messages-list"></ul>
+            </div>
+
+            @* input *@
+            <div class="mt-1 mb-3 ">
+                <form id="message-form">
+                    <input id="user" />
+                    <div class="input-group">
+                        <input class="form-control" placeholder="message" id="message" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" id="sendbtn">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+    
+    <div class="col"></div>
 </div>

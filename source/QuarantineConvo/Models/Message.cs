@@ -8,14 +8,14 @@ namespace QuarantineConvo.Models {
     public class Message {
 
         [Key]
-        public int ID;
+        public int ID { get; set; }
 
-        public DateTime timeStamp;
+        public DateTime TimeStamp { get; set; }
 
-        public Connection connection;
+        public Connection Connection { get; set; }
 
-        public User SentBy;
+        public User SentBy { get; set; }
 
-        public string Msg;
+        public string Msg { get; set; }
     }
 }
