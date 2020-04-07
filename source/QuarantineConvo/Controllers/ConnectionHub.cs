@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace QuarantineConvo.Models {
         public async Task SendMessage(string user, string message) {
             // TODO Save message to database
 
+            //HttpContext.Session.GetString(UsersController.SessionKeyName, "tmayoff");
+            user = Context.User.Identity.Name;
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
     }
