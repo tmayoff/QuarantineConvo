@@ -15,19 +15,27 @@ using QuarantineConvo.Models;
 namespace QuarantineConvo.Controllers {
     public class MessagingController : Controller {
 
+        private readonly QuarantineConvoIdentityContext identityContext;
         private readonly QuarantineConvoContext db;
         private List<SearchRequest> searchRequests = new List<SearchRequest>();
         private IHubContext<ConnectionHub> hubContext;
 
-        public MessagingController(QuarantineConvoContext context, IHubContext<ConnectionHub> hubcontext) {
+        public MessagingController(QuarantineConvoContext context, IHubContext<ConnectionHub> hubcontext, QuarantineConvoIdentityContext _identityContext) {
             db = context;
             hubContext = hubcontext;
+            identityContext = _identityContext;
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
+
+            string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
+            User user = identityContext.Find(typeof(User), oUser) as User;
+
+            ViewData["otherUser"] = user;
+
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
             ViewData["messages"] = messages;
             return View(connection);
@@ -106,6 +114,12 @@ namespace QuarantineConvo.Controllers {
 
             await hubContext.Clients.User(clientConnection_1.UserID).SendAsync("ReceiveNotification", message_1);
             await hubContext.Clients.User(clientConnection_2.UserID).SendAsync("ReceiveNotification", message_2);
+        }
+
+        public IActionResult Connections()
+        {
+            List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
+            return View(con);
         }
     }
 }

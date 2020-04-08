@@ -8,7 +8,14 @@ using System.Threading.Tasks;
 
 namespace QuarantineConvo.Models {
     public class User : IdentityUser {
-        
+
+        [Required]
+        [StringLength(50)]
+        [RegularExpression("^[a-zA-Z]*$")]
+        [DisplayName("Display name")]
+        [PersonalData]
+        public string DisplayName { get; set; }
+
         [Required]
         [StringLength(50)]
         [RegularExpression("^[a-zA-Z]*$")]
@@ -24,6 +31,6 @@ namespace QuarantineConvo.Models {
         public string LastName { get; set; }
 
         [PersonalData]
-        public bool isAdmin { get; set; }
+        public long InterestBitmask { get; set; }
     }
 }

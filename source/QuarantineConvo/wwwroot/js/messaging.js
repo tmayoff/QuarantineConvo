@@ -12,6 +12,14 @@ $(document).ready(() => {
     });
 
     // Setup event listeners
+    $("#message").autogrow({ vertical: true, horizontal: false });
+    $("#message").on("keyup", (e) => {
+        if (e.keyCode == 13) {
+            SendMessage();
+        }
+        e.preventDefault();
+    })
+
     $("#message-form").on("submit", (e) => {
         SendMessage();
         e.preventDefault();
@@ -19,7 +27,6 @@ $(document).ready(() => {
     })
 
     connection.on("ReceiveMessage", (message) => {
-        console.log("RECEIVING");
         ReceiveMessage(message);
     });
 
@@ -60,7 +67,6 @@ $(document).ready(() => {
     }
 
     function ReceiveMessage(message) {
-        console.log("RECEIVING");
 
         // Clean the message of dangerous strings
         var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
