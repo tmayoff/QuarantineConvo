@@ -16,6 +16,8 @@ namespace QuarantineConvo.Models {
 
         public string user2 { get; set; }
 
+        public long interests { get; set; }
+
         public bool active { get; set; }
     }
 }
