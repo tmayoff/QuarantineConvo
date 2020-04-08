@@ -152,7 +152,24 @@ namespace QuarantineConvo.Controllers {
 
         public IActionResult Connections() {
             List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
-            return View(con);
+
+            List<DisplayNameConnection> displayNameConnections = new List<DisplayNameConnection>();
+            foreach(Connection c in con) {
+                // Get the other user's display name
+                string oUser = c.user1 == User.Identity.Name ? c.user2 : c.user1;
+                // Get their user object
+                User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
+
+
+                DisplayNameConnection displayNameConnection = new DisplayNameConnection() {
+                    OtherUser = user,
+                    Connection = c
+                };
+
+                displayNameConnections.Add(displayNameConnection);
+            }
+
+            return View(displayNameConnections);
         }
     }
 }
