@@ -30,6 +30,8 @@ namespace QuarantineConvo.Controllers {
         [HttpGet]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
+            if (connection == null || connection.user1 != User.Identity.Name || connection.user2 != User.Identity.Name)
+                RedirectToAction("Connections");
 
             string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
             User user = identityContext.Find(typeof(User), oUser) as User;
@@ -41,13 +43,14 @@ namespace QuarantineConvo.Controllers {
             return View(connection);
         }
 
+        [Authorize]
         public IActionResult FindConnection(string message) {
             var interests = db.Interest.ToList();
-
             return View(interests);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Search(List<string> interestCheckboxes) {
             string currentUser = User.Identity.Name;
             long currentInterests = GetInterests(interestCheckboxes);
@@ -73,10 +76,8 @@ namespace QuarantineConvo.Controllers {
 
                 Connection theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
 
-                if(theConnection == null)
-                {
-                    theConnection = new Connection()
-                    {
+                if (theConnection == null) {
+                    theConnection = new Connection() {
                         user1 = currentUser,
                         user2 = foundUser.Username,
                         interests = commonInterests,
@@ -86,8 +87,7 @@ namespace QuarantineConvo.Controllers {
                     db.Connection.Add(theConnection);
                 }
 
-                else
-                {
+                else {
                     theConnection.interests = commonInterests;
                     theConnection.active = true;
 
@@ -117,26 +117,24 @@ namespace QuarantineConvo.Controllers {
             return interests;
         }
 
-        private string GetInterestNames(long interestsBitMap){
+        private string GetInterestNames(long interestsBitMap) {
             string interests = string.Empty;
 
-            foreach(Interest interest in db.Interest) {
+            foreach (Interest interest in db.Interest) {
                 long bitCompare = 1 << (int)interest.Position;
 
-                if ((interestsBitMap & bitCompare) != 0)
-                {
+                if ((interestsBitMap & bitCompare) != 0) {
                     if (!string.IsNullOrWhiteSpace(interests))
                         interests += ", ";
 
                     interests += interest.Name;
-                }   
+                }
             }
 
             return interests;
         }
 
-        public async Task SendNewConnection(string connectionString)
-        {
+        public async Task SendNewConnection(string connectionString) {
             int connectionID = int.Parse(connectionString);
             Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionID);
 
@@ -152,8 +150,7 @@ namespace QuarantineConvo.Controllers {
             await hubContext.Clients.User(clientConnection_2.UserID).SendAsync("ReceiveNotification", message_2);
         }
 
-        public IActionResult Connections()
-        {
+        public IActionResult Connections() {
             List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
             return View(con);
         }
