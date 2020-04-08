@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
@@ -16,9 +17,11 @@ namespace QuarantineConvo.Controllers {
 
         private readonly QuarantineConvoContext db;
         private List<SearchRequest> searchRequests = new List<SearchRequest>();
+        private IHubContext<ConnectionHub> hubContext;
 
-        public MessagingController(QuarantineConvoContext context) {
+        public MessagingController(QuarantineConvoContext context, IHubContext<ConnectionHub> hubcontext) {
             db = context;
+            hubContext = hubcontext;
         }
 
         [Authorize]
@@ -37,7 +40,7 @@ namespace QuarantineConvo.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Search(List<string> interestCheckboxes) {
+        public async Task<ActionResult> Search(List<string> interestCheckboxes) {
             string currentUser = User.Identity.Name;
             long currentInterests = GetInterests(interestCheckboxes);
 
@@ -70,6 +73,8 @@ namespace QuarantineConvo.Controllers {
                 db.SaveChanges();
 
                 theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
+
+                await hubContext.Clients.User(currentUser).SendCoreAsync("SendNewConnection", new object[] { theConnection });
 
                 return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
