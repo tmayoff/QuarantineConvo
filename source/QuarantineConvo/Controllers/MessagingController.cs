@@ -74,7 +74,7 @@ namespace QuarantineConvo.Controllers {
 
                 theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
 
-                await hubContext.Clients.User(currentUser).SendAsync("SendNewConnection", new object[] { theConnection.ID.ToString() });
+                await SendNewConnection(theConnection.ID.ToString());
 
                 return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
@@ -91,6 +91,21 @@ namespace QuarantineConvo.Controllers {
             }
 
             return interests;
+        }
+
+        public async Task SendNewConnection(string connectionString)
+        {
+            int connectionID = int.Parse(connectionString);
+            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionID);
+
+            ClientConnection clientConnection_1 = db.ClientConnection.FirstOrDefault(c => c.UserName == connection.user1);
+            ClientConnection clientConnection_2 = db.ClientConnection.FirstOrDefault(c => c.UserName == connection.user2);
+
+            string message_1 = "New connection with user: " + connection.user2;
+            string message_2 = "New connection with user: " + connection.user1;
+
+            await hubContext.Clients.User(clientConnection_1.UserID).SendAsync("ReceiveNotification", message_1);
+            await hubContext.Clients.User(clientConnection_2.UserID).SendAsync("ReceiveNotification", message_2);
         }
     }
 }

@@ -72,20 +72,5 @@ namespace QuarantineConvo.Models {
             //var us = userConnections.Remove(userConnections.FirstOrDefault(u => u.UserName == Context.User.Identity.Name && u.ConnectionID == Context.ConnectionId));
             return base.OnDisconnectedAsync(exception);
         }
-
-        public async Task SendNewConnection(string connectionString)
-        {
-            int connectionID = int.Parse(connectionString);
-            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionID);
-
-            ClientConnection clientConnection_1 = db.ClientConnection.FirstOrDefault(c => c.UserName == connection.user1);
-            ClientConnection clientConnection_2 = db.ClientConnection.FirstOrDefault(c => c.UserName == connection.user2);
-
-            string message_1 = "New connection with user: " + connection.user2;
-            string message_2 = "New connection with user: " + connection.user1;
-
-            await Clients.User(clientConnection_1.UserID).SendAsync("ReceiveNotification", message_1);
-            await Clients.User(clientConnection_2.UserID).SendAsync("ReceiveNotification", message_2);
-        }
     }
 }
