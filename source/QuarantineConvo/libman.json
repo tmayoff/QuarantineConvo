@@ -17,6 +17,11 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery.ns-autogrow@1.1.6",
+      "destination": "wwwroot/js/jquery.ns-autogrow/"
     }
   ]
 }

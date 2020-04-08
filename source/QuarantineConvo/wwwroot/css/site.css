@@ -8,6 +8,8 @@ for details on configuring this project to bundle and minify static web assets. 
     padding: 5px;
     margin-right: 10px;
     list-style-type: none;
+    float: left;
+    max-width: 75%;
 }
 
     .message-left span {
@@ -16,6 +18,8 @@ for details on configuring this project to bundle and minify static web assets. 
         padding: 10px;
         background-color: #CDF6E8;
         border-radius: 10px;
+        word-break: break-all;
+        float: left;
     }
 
 .message-right {
@@ -24,6 +28,7 @@ for details on configuring this project to bundle and minify static web assets. 
     margin-right: 10px;
     list-style-type: none;
     float: right;
+    max-width: 75%;
 }
 
     .message-right span {
@@ -32,8 +37,9 @@ for details on configuring this project to bundle and minify static web assets. 
         padding: 10px;
         background-color: #BCD9EC;
         border-radius: 10px;
+        word-break:break-all;
+        float: right;
     }
-
 
 a.navbar-brand {
     white-space: normal;
@@ -46,11 +52,11 @@ a {
     color: #0366d6;
 }
 
-.btn-primary {
+/*.btn-primary {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-}
+}*/
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
