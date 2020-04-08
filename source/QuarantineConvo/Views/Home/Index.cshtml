@@ -11,7 +11,7 @@
     <h1 class="display-4">Welcome</h1>
 
     @if (SignInManager.IsSignedIn(User)) {
-        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
+        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Connections">Click here to get started</a>
     }
     else {
         <a class="btn btn-primary">Please Login</a>

@@ -21,6 +21,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="row">
+            <a class="btn btn-primary" asp-controller="Messaging" asp-action="FindConnection">Click here to find a new mate!</a>
+        </div>
             @foreach (Connection c in Model)
             {
                 <div class="row">
