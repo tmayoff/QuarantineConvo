@@ -36,12 +36,7 @@
 
             <div class="card d-flex flex-grow-1">
                 <div class="card-header">
-                    @if (User.Identity.Name == Model.user1) {
-                        <span class="text-center">Talking to @Model.user2</span>
-                    }
-                    else {
-                        <span class="text-center">Talking to @Model.user1</span>
-                    }
+                    <span class="text-center">Talking to @ViewData["otherUser"]</span>
                 </div>
                 <div class="card-body flex-grow-1" id="message-scroll" style="height:0; overflow:auto">
                     <ul id="messages-list">
@@ -65,7 +60,7 @@
                     <form id="message-form">
                         <div class="input-group">
                             <input id="connection-id" value="@Model.ID" type="hidden" />
-                            <textarea class="form-control" placeholder="message" id="message" rows="1"></textarea>
+                            <textarea class="form-control" placeholder="message" id="message" rows="1" style="resize: none"></textarea>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-info" id="sendbtn">Send</button>
                             </div>

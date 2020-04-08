@@ -51,6 +51,13 @@ namespace QuarantineConvo.Areas.Identity.Pages.Account {
             [Required]
             [StringLength(50)]
             [RegularExpression("^[a-zA-Z]*$")]
+            [DisplayName("Display name")]
+            [PersonalData]
+            public string DisplayName { get; set; }
+
+            [Required]
+            [StringLength(50)]
+            [RegularExpression("^[a-zA-Z]*$")]
             [DisplayName("First name")]
             [PersonalData]
             public string FirstName { get; set; }
@@ -87,7 +94,9 @@ namespace QuarantineConvo.Areas.Identity.Pages.Account {
                     UserName = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    Email = Input.Email
+                    Email = Input.Email,
+                    DisplayName = Input.DisplayName
+                    
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded) {

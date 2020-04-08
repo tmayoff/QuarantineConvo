@@ -12,7 +12,6 @@ namespace QuarantineConvo.Models {
 
     public class ConnectionHub : Hub {
 
-
         QuarantineConvoContext db;
 
         public ConnectionHub(IServiceProvider sp) {
