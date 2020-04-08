@@ -14,17 +14,25 @@ using QuarantineConvo.Models;
 namespace QuarantineConvo.Controllers {
     public class MessagingController : Controller {
 
+        private readonly QuarantineConvoIdentityContext identityContext;
         private readonly QuarantineConvoContext db;
         private List<SearchRequest> searchRequests = new List<SearchRequest>();
 
-        public MessagingController(QuarantineConvoContext context) {
+        public MessagingController(QuarantineConvoContext context, QuarantineConvoIdentityContext _identityContext) {
             db = context;
+            identityContext = _identityContext;
         }
 
         [Authorize]
         [HttpPost]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
+
+            string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
+            User user = identityContext.Find(typeof(User), oUser) as User;
+
+            ViewData["otherUser"] = user;
+
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
             ViewData["messages"] = messages;
             return View(connection);
