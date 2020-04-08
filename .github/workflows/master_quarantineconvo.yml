@@ -21,12 +21,10 @@ jobs:
         dotnet-version: '3.1.102'
 
     - name: Build with dotnet
-      working-directory: .\source\QuarantineConvo
-      run: dotnet build --configuration Release
+      run: dotnet build .\source\QuarantineConvo\QuarantineConvo.sln --configuration Release 
 
     - name: dotnet publish
-      working-directory: .\source\QuarantineConvo
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish .\source\QuarantineConvo\QuarantineConvo.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
