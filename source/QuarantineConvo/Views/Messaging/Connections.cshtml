@@ -27,7 +27,7 @@
             @foreach (Connection c in Model)
             {
                 <div class="row">
-                    <form id="@c.ID" class="card" method="post" asp-controller="Messaging" asp-action="Index">
+                    <form id="@c.ID" class="card" method="get" asp-controller="Messaging" asp-action="Index">
 
                         @if (c.user1 == User.Identity.Name)
                         {

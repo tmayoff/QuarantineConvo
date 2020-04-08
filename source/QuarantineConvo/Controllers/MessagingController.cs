@@ -27,7 +27,7 @@ namespace QuarantineConvo.Controllers {
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpGet]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
 
