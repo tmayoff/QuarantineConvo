@@ -14,6 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+    
+    - name: TEST
+      run: cd
 
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
