@@ -8,12 +8,17 @@
 @inject UserManager<User> UserManager
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Qurantine Convo</h1>
+
+    <p>A place to find people and make new friends during this tough time.<br>Find people with the same interests and spark up a conversation!</p>
+
+    <p>Find a new friend and add them to your "Self-Isolating Bros" where you can contact them again anytime!</p>
 
     @if (SignInManager.IsSignedIn(User)) {
         <a class="btn btn-primary" asp-controller="Messaging" asp-action="Connections">Click here to get started</a>
     }
     else {
         <a class="btn btn-primary">Please Login</a>
+        <a class="btn btn-primary">Or create an account</a>
     }
 </div>
