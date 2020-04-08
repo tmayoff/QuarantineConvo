@@ -34,9 +34,9 @@ namespace QuarantineConvo.Controllers {
                 RedirectToAction("Connections");
 
             string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
-            User user = identityContext.Find(typeof(User), oUser) as User;
+            User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-            ViewData["otherUser"] = user;
+            ViewData["otherUser"] = user.DisplayName;
 
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
             ViewData["messages"] = messages;
