@@ -1,4 +1,4 @@
-﻿s
+﻿@model IEnumerable<Connection>
 @{
     ViewData["Title"] = "Connections";
 }
@@ -12,21 +12,35 @@
             transition: 0.3s;
             width: 40%;
         }
-
-            .card:hover {
-                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
     </style>
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/messaging.js"></script>
-
 </head>
 <body>
-    <div class="card">
-        <div class="container">
-            <h4><b>John Doe</b></h4>
-            <p>Architect & Engineer</p>
+    <div class="container">
+            @foreach (Connection c in Model)
+            {
+                <div class="row">
+                    <form id="@c.ID" class="card" method="post" asp-controller="Messaging" asp-action="Index">
+
+                        @if (c.user1 == User.Identity.Name)
+                        {
+                            <p a>@c.user2</p>
+                        }
+                        else
+                        {
+                            <p>@c.user1</p>
+                        }
+                        <input hidden Name="connectionId" value="@c.ID"/>
+                    </form>
+                </div>
+                <script>
+                    document.getElementById("@c.ID").addEventListener("click", document.getElementById("@c.ID").submit);
+                </script>
+        }
         </div>
-    </div>
 </body>
 

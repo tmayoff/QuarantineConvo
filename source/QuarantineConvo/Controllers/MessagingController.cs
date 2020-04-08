@@ -22,7 +22,7 @@ namespace QuarantineConvo.Controllers {
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
@@ -86,6 +86,12 @@ namespace QuarantineConvo.Controllers {
             }
 
             return interests;
+        }
+
+        public IActionResult Connections()
+        {
+            List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
+            return View(con);
         }
     }
 }
