@@ -30,10 +30,12 @@ namespace QuarantineConvo.Services
             theMessage.To.Add(new MailboxAddress(email, email));
 
             theMessage.Subject = subject;
-            theMessage.Body = new TextPart("plain")
-            {
-                Text = message
-            };
+
+            BodyBuilder bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = message;
+
+
+            theMessage.Body = bodyBuilder.ToMessageBody();
 
             var client = new SmtpClient();
             
