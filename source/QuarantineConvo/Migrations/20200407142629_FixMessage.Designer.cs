@@ -10,8 +10,8 @@ using QuarantineConvo.Data;
 namespace QuarantineConvo.Migrations
 {
     [DbContext(typeof(QuarantineConvoContext))]
-    [Migration("20200406162102_UpdateConnectionDB")]
-    partial class UpdateConnectionDB
+    [Migration("20200407142629_FixMessage")]
+    partial class FixMessage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,48 +28,51 @@ namespace QuarantineConvo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConnectionID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("active")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("user1ID")
-                        .HasColumnType("int");
+                    b.Property<string>("user1")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("user2ID")
-                        .HasColumnType("int");
+                    b.Property<string>("user2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("user1ID");
-
-                    b.HasIndex("user2ID");
 
                     b.ToTable("Connection");
                 });
 
-            modelBuilder.Entity("QuarantineConvo.Models.User", b =>
+            modelBuilder.Entity("QuarantineConvo.Models.Message", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ConnectionID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Msg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SentBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ID");
 
-                    b.ToTable("User");
+                    b.HasIndex("ConnectionID");
+
+                    b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("QuarantineConvo.Models.Connection", b =>
+            modelBuilder.Entity("QuarantineConvo.Models.Message", b =>
                 {
-                    b.HasOne("QuarantineConvo.Models.User", "user1")
+                    b.HasOne("QuarantineConvo.Models.Connection", "Connection")
                         .WithMany()
-                        .HasForeignKey("user1ID");
-
-                    b.HasOne("QuarantineConvo.Models.User", "user2")
-                        .WithMany()
-                        .HasForeignKey("user2ID");
+                        .HasForeignKey("ConnectionID");
                 });
 #pragma warning restore 612, 618
         }

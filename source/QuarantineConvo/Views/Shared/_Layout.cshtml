@@ -9,21 +9,28 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
-<body>
-    <div class="d-flex flex-column h-100">
-        <div class="container-fluid flex-grow-1" style="margin-bottom: 60px">
-            <main role="main" class="flex-grow-1 d-flex flex-column h-100">
-                @RenderBody()
-            </main>
-        </div>
-
-        <footer class="border-top footer">
-            <div class="container">
-                &copy; 2020 - QuarantineConvo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                <partial name="_LoginPartial" />
             </div>
-        </footer>
+        </nav>
+    </header>
 
-    </div>
+    <main role="main" class="container-fluid d-flex flex-grow-1 justify-content-center" style="margin-top: 56px; margin-bottom: 61px;">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top footer">
+        <div class="container">
+            &copy; 2020 - QuarantineConvo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

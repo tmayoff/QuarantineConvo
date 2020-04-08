@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Messaging";
-    //if (Model?.user1 == null || Model?.user2 == null) { return; }
+    if (Model?.user1 == null || Model?.user2 == null) { return; }
 }
 
     <head>
@@ -24,34 +24,96 @@
         <script src="~/js/messaging.js"></script>
 
     </head>
+<span class="d-none" id="username">@User.Identity.Name</span>
 
 <div class="row d-flex flex-grow-1">
-    <div class="col"></div>
-    <div class="col-8">
-        <div class="d-flex flex-column h-100 border-left border-right p-2" id="messages-body">
+    <div class="col-md d-none d-md-block"></div>
 
-            <div class="border-bottom border-light">
-                <span class="text-center">Talking to </span>
+    <div class="col-md-8 d-flex flex-grow-1">
+        <div class="flex-grow-1 d-flex flex-column border-left border-right p-2" id="messages-body">
+
+            <div class="card d-flex flex-grow-1">
+                <div class="card-header">
+                    @if (User.Identity.Name == Model.user1) {
+                        <span class="text-center">Talking to @Model.user2</span>
+                    }
+                    else {
+                        <span class="text-center">Talking to @Model.user1</span>
+                    }
+                </div>
+                <div class="card-body flex-grow-1" id="message-scroll" style="height:0; overflow:auto">
+                    <ul id="messages-list">
+                        @foreach (var msg in (List<Message>)ViewData["messages"]) {
+                            if (msg.SentBy == User.Identity.Name) {
+                                <li class="message-right mb-3">
+                                    <span class="shadow-sm">@msg.Msg</span>
+                                </li>
+                            }
+                            else {
+                                <li class="message-left mb-3">
+                                    <span class="shadow-sm">@msg.Msg</span>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <form id="message-form">
+                        <div class="input-group">
+                            <input id="connection-id" value="@Model.ID" type="hidden" />
+                            <textarea class="form-control" placeholder="message" id="message"></textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" id="sendbtn">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
+
+            @*<div class="border-bottom border-light">
+                    @if (User.Identity.Name == Model.user1) {
+                        <span class="text-center">Talking to @Model.user2</span>
+                    }
+                    else {
+                        <span class="text-center">Talking to @Model.user1</span>
+                    }
+                </div>*@
 
             @* messages box *@
-            <div class="flex-grow-1 messages m-1 p-4">
-                <ul id="messages-list"></ul>
-            </div>
+            @*<div class="flex-grow-1 messages m-1 p-4">
+                    <ul id="messages-list">
+                        @foreach (var msg in (List<Message>)ViewData["messages"]) {
+                            if (msg.SentBy == User.Identity.Name) {
+                                <li class="message-right mb-3">
+                                    <span class="shadow-sm">@msg.Msg</span>
+                                </li>
+                            }
+                            else {
+                                <li class="message-left mb-3">
+                                    <span class="shadow-sm">@msg.Msg</span>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>*@
 
             @* input *@
-            <div class="mt-1 mb-3 ">
-                <form id="message-form">
-                    <input id="user" />
-                    <div class="input-group">
-                        <input class="form-control" placeholder="message" id="message" />
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-info" id="sendbtn">Send</button>
+            @*<div class="mt-1 mb-3 ">
+                    <form id="message-form">
+
+                        <div class="input-group">
+                            <input id="connection-id" value="@Model.ID" type="hidden"/>
+                            <textarea class="form-control" placeholder="message" id="message"></textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" id="sendbtn">Send</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>*@
         </div>
     </div>
-    <div class="col"></div>
+
+    <div class="col-md d-none d-md-block"></div>
 </div>
