@@ -40,7 +40,6 @@ namespace QuarantineConvo.Models {
                 toUser = connection.user1;
 
             ClientConnection clientConnection = db.ClientConnection.FirstOrDefault(c => c.UserName == toUser);
-
             await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", message);
         }
 

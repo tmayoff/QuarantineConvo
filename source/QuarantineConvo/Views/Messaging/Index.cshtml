@@ -5,6 +5,7 @@
     if (Model?.user1 == null || Model?.user2 == null) { return; }
 }
 
+<script src="~/js/jquery.ns-autogrow/jquery.ns-autogrow.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script src="~/js/messaging.js"></script>
 
@@ -47,7 +48,7 @@
                     <form id="message-form">
                         <div class="input-group">
                             <input id="connection-id" value="@Model.ID" type="hidden" />
-                            <textarea class="form-control" placeholder="message" id="message"></textarea>
+                            <textarea class="form-control" placeholder="message" id="message" rows="1"></textarea>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-info" id="sendbtn">Send</button>
                             </div>
@@ -55,47 +56,6 @@
                     </form>
                 </div>
             </div>
-
-            @*<div class="border-bottom border-light">
-                    @if (User.Identity.Name == Model.user1) {
-                        <span class="text-center">Talking to @Model.user2</span>
-                    }
-                    else {
-                        <span class="text-center">Talking to @Model.user1</span>
-                    }
-                </div>*@
-
-            @* messages box *@
-            @*<div class="flex-grow-1 messages m-1 p-4">
-                    <ul id="messages-list">
-                        @foreach (var msg in (List<Message>)ViewData["messages"]) {
-                            if (msg.SentBy == User.Identity.Name) {
-                                <li class="message-right mb-3">
-                                    <span class="shadow-sm">@msg.Msg</span>
-                                </li>
-                            }
-                            else {
-                                <li class="message-left mb-3">
-                                    <span class="shadow-sm">@msg.Msg</span>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>*@
-
-            @* input *@
-            @*<div class="mt-1 mb-3 ">
-                    <form id="message-form">
-
-                        <div class="input-group">
-                            <input id="connection-id" value="@Model.ID" type="hidden"/>
-                            <textarea class="form-control" placeholder="message" id="message"></textarea>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-info" id="sendbtn">Send</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>*@
         </div>
     </div>
 
