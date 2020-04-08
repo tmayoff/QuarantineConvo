@@ -74,7 +74,7 @@ namespace QuarantineConvo.Controllers {
 
                 theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
 
-                await hubContext.Clients.User(currentUser).SendCoreAsync("SendNewConnection", new object[] { theConnection });
+                await hubContext.Clients.User(currentUser).SendAsync("SendNewConnection", new object[] { theConnection.ID.ToString() });
 
                 return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
