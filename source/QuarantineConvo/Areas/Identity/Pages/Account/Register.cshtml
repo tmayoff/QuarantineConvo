@@ -16,6 +16,12 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Input.DisplayName"></label>
+                <input asp-for="Input.DisplayName" class="form-control" />
+                <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="Input.FirstName"></label>
                 <input asp-for="Input.FirstName" class="form-control" />
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
@@ -39,19 +45,11 @@
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        @*<section>
+        <section>
             <h4>Use another service to register.</h4>
             <hr />
             @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0) {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else {
+                if ((Model.ExternalLogins?.Count ?? 0) != 0) {
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                         <div>
                             <p>
@@ -63,7 +61,7 @@
                     </form>
                 }
             }
-        </section>*@
+        </section>
     </div>
 </div>
 

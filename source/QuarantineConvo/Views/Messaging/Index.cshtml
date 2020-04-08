@@ -19,12 +19,7 @@
 
             <div class="card d-flex flex-grow-1">
                 <div class="card-header">
-                    @if (User.Identity.Name == Model.user1) {
-                        <span class="text-center">Talking to @Model.user2</span>
-                    }
-                    else {
-                        <span class="text-center">Talking to @Model.user1</span>
-                    }
+                    <span class="text-center">Talking to @ViewData["otherUser"]</span>
                 </div>
                 <div class="card-body flex-grow-1" id="message-scroll" style="height:0; overflow:auto">
                     <ul id="messages-list">
