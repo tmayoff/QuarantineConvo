@@ -30,8 +30,8 @@ namespace QuarantineConvo.Controllers {
         [HttpGet]
         public IActionResult Index(int connectionId) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
-            if (connection == null || connection.user1 != User.Identity.Name || connection.user2 != User.Identity.Name)
-                RedirectToAction("Connections");
+            if (connection == null || (connection.user1 != User.Identity.Name && connection.user2 != User.Identity.Name))
+                return RedirectToAction("Connections");
 
             string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
             User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
@@ -39,6 +39,11 @@ namespace QuarantineConvo.Controllers {
             ViewData["otherUser"] = user.DisplayName;
 
             List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
+            foreach (Message message in messages) {
+                message.Read = true;
+                db.Message.Update(message);
+            }
+            db.SaveChanges();
             ViewData["messages"] = messages;
             return View(connection);
         }
@@ -154,16 +159,17 @@ namespace QuarantineConvo.Controllers {
             List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
 
             List<DisplayNameConnection> displayNameConnections = new List<DisplayNameConnection>();
-            foreach(Connection c in con) {
+            foreach (Connection c in con) {
                 // Get the other user's display name
                 string oUser = c.user1 == User.Identity.Name ? c.user2 : c.user1;
                 // Get their user object
                 User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-
+                bool containsUnread = db.Message.Any(m => m.Connection.ID == c.ID && !m.Read);
                 DisplayNameConnection displayNameConnection = new DisplayNameConnection() {
                     OtherUser = user,
-                    Connection = c
+                    Connection = c,
+                    ContainsUnread = containsUnread
                 };
 
                 displayNameConnections.Add(displayNameConnection);

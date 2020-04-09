@@ -13,9 +13,11 @@ namespace QuarantineConvo.Models {
     public class ConnectionHub : Hub {
 
         QuarantineConvoContext db;
+        QuarantineConvoIdentityContext IdentityContext;
 
         public ConnectionHub(IServiceProvider sp) {
             db = sp.GetRequiredService(typeof(QuarantineConvoContext)) as QuarantineConvoContext;
+            IdentityContext = sp.GetRequiredService(typeof(QuarantineConvoIdentityContext)) as QuarantineConvoIdentityContext;
         }
 
         public async Task SendMessage(string connectionString, string message) {
@@ -27,7 +29,8 @@ namespace QuarantineConvo.Models {
                 Connection = connection,
                 Msg = message,
                 SentBy = user,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTime.UtcNow,
+                Read = false
             };
             db.Message.Add(msg);
             db.SaveChanges();
@@ -39,7 +42,28 @@ namespace QuarantineConvo.Models {
                 toUser = connection.user1;
 
             ClientConnection clientConnection = db.ClientConnection.FirstOrDefault(c => c.UserName == toUser);
-            await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", message);
+            await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", message, msg.ID);
+        }
+
+        public async Task ReadMessage(int messageID) {
+            Message msg = db.Message.First(m => m.ID == messageID);
+            msg.Read = true;
+            db.Message.Update(msg);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task SendNotification(string toUserID, string message) {
+            // Add to the database
+
+
+            await Clients.User(toUserID).SendAsync("ReceiveNotification", message);
+        }
+
+        public string GetDisplayNameFromEmail(string email) {
+            User u = IdentityContext.Users.FirstOrDefault(u => u.Email == email);
+            if (u == null) return "";
+
+            return u.DisplayName;
         }
 
         public override Task OnConnectedAsync() {

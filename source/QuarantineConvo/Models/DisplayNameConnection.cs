@@ -9,5 +9,7 @@ namespace QuarantineConvo.Models {
         public User OtherUser;
 
         public Connection Connection;
+
+        public bool ContainsUnread;
     }
 }
