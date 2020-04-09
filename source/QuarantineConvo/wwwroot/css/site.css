@@ -1,6 +1,26 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/* Chips */
+.chip {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+    .chip input[type=checkbox] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
 
 /* Messaging Page */
 .message-left {
@@ -18,7 +38,6 @@ for details on configuring this project to bundle and minify static web assets. 
         padding: 10px;
         background-color: #CDF6E8;
         border-radius: 10px;
-        word-break: break-all;
         float: left;
     }
 
@@ -37,7 +56,6 @@ for details on configuring this project to bundle and minify static web assets. 
         padding: 10px;
         background-color: #BCD9EC;
         border-radius: 10px;
-        word-break:break-all;
         float: right;
     }
 

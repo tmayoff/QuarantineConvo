@@ -17,5 +17,7 @@ namespace QuarantineConvo.Models {
         public string SentBy { get; set; }
 
         public string Msg { get; set; }
+
+        public bool Read { get; set; }
     }
 }
