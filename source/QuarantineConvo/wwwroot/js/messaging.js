@@ -5,6 +5,10 @@ $(document).ready(() => {
 
     // Setup event listeners
     $("#message").autogrow({ vertical: true, horizontal: false });
+
+    $("#message").on("keydown", (e) => {
+        if (e.keyCode == 13) e.preventDefault();
+    })
     $("#message").on("keyup", (e) => {
         if (e.keyCode == 13) {
             SendMessage();
@@ -16,13 +20,7 @@ $(document).ready(() => {
         SendMessage();
         e.stopImmediatePropagation()
         e.preventDefault();
-    })
-
-    //connection.on("ReceiveMessage", (message, id) => {
-    //    ReceiveMessage(message);
-    //    console.log(id);
-    //    
-    //});
+    });
 })
 
 // Functions
@@ -31,7 +29,7 @@ function SendMessage() {
 
     var connectionID = $("#connection-id").val();
     if (connectionID == "") return;
-    var message = $("#message").val();
+    var message = $("#message").val().trim();
     if (message == "") return;
 
     // Send the message
