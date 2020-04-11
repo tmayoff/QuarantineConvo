@@ -10,7 +10,7 @@ namespace QuarantineConvo.Models {
     public class Connection {
 
         [Key]
-        public int ID { get; set; }
+        public Guid ID { get; set; }
 
         public string user1 { get; set; }
 

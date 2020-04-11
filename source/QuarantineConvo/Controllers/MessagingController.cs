@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
 
@@ -29,23 +30,37 @@ namespace QuarantineConvo.Controllers {
         [Authorize]
         [HttpGet]
         public IActionResult Index(int connectionId) {
-            Connection connection = db.Connection.FirstOrDefault(c => c.ID == connectionId);
-            if (connection == null || (connection.user1 != User.Identity.Name && connection.user2 != User.Identity.Name))
-                return RedirectToAction("Connections");
+            List<Connection> connections = db.Connection.Where(con => User.Identity.Name == con.user1 || User.Identity.Name == con.user2).ToList();
 
-            string oUser = connection.user1 == User.Identity.Name ? connection.user2 : connection.user1;
-            User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
+            List<ConnectionList> connectionListObjs = new List<ConnectionList>();
+            foreach (Connection c in connections) {
+                // Get the other user's display name
+                string oUser = c.user1 == User.Identity.Name ? c.user2 : c.user1;
+                // Get their user object
+                User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-            ViewData["otherUser"] = user.DisplayName;
+                bool containsUnread = db.Message.Any(m => m.Connection.ID == c.ID && !m.Read);
+                string lastMessage = db.Message.Where(m => m.Connection.ID == c.ID).OrderBy(m => m.TimeStamp).FirstOrDefault()?.Msg;
+                ConnectionList displayNameConnection = new ConnectionList() {
+                    OtherUser = user,
+                    Connection = c,
+                    ContainsUnread = containsUnread,
+                    LastMessage = lastMessage
+                };
 
-            List<Message> messages = db.Message.Where(m => m.Connection.ID == connection.ID).ToList();
-            foreach (Message message in messages) {
-                message.Read = true;
-                db.Message.Update(message);
+                connectionListObjs.Add(displayNameConnection);
             }
-            db.SaveChanges();
-            ViewData["messages"] = messages;
-            return View(connection);
+
+            return View(connectionListObjs);
+        }
+
+        [HttpPost]
+        public string GetMessagesContent(string connectionID) {
+            Connection connection = db.Connection.FirstOrDefault(c => c.ID == Guid.Parse(connectionID));
+            if (connection == null) return "";
+
+            List<Message> messages = db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionID)).OrderBy(m => m.TimeStamp).ToList();
+            return JsonConvert.SerializeObject(new { Username = GetDisplayNameFromEmail(connection.user1), messages });
         }
 
         [Authorize]
@@ -105,7 +120,7 @@ namespace QuarantineConvo.Controllers {
 
                 theConnection = db.Connection.FirstOrDefault(c => c.user1 == currentUser && c.user2 == foundUser.Username);
 
-                await SendNewConnection(theConnection.ID.ToString());
+                await SendNewConnection(theConnection.ID);
 
                 return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
@@ -139,9 +154,9 @@ namespace QuarantineConvo.Controllers {
             return interests;
         }
 
-        public async Task SendNewConnection(string connectionString) {
-            int connectionID = int.Parse(connectionString);
-            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionID);
+        public async Task SendNewConnection(Guid connectionString) {
+
+            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionString);
 
             string interests = GetInterestNames(connection.interests);
 
@@ -156,26 +171,34 @@ namespace QuarantineConvo.Controllers {
         }
 
         public IActionResult Connections() {
-            List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
+            //List<Connection> con = db.Connection.Where(c => User.Identity.Name == c.user1 || User.Identity.Name == c.user2).ToList();
 
-            List<DisplayNameConnection> displayNameConnections = new List<DisplayNameConnection>();
-            foreach (Connection c in con) {
-                // Get the other user's display name
-                string oUser = c.user1 == User.Identity.Name ? c.user2 : c.user1;
-                // Get their user object
-                User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
+            //List<DisplayNameConnection> displayNameConnections = new List<DisplayNameConnection>();
+            //foreach (Connection c in con) {
+            //    // Get the other user's display name
+            //    string oUser = c.user1 == User.Identity.Name ? c.user2 : c.user1;
+            //    // Get their user object
+            //    User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-                bool containsUnread = db.Message.Any(m => m.Connection.ID == c.ID && !m.Read);
-                DisplayNameConnection displayNameConnection = new DisplayNameConnection() {
-                    OtherUser = user,
-                    Connection = c,
-                    ContainsUnread = containsUnread
-                };
+            //    bool containsUnread = db.Message.Any(m => m.Connection.ID == c.ID && !m.Read);
+            //    DisplayNameConnection displayNameConnection = new DisplayNameConnection() {
+            //        OtherUser = user,
+            //        Connection = c,
+            //        ContainsUnread = containsUnread
+            //    };
 
-                displayNameConnections.Add(displayNameConnection);
-            }
+            //    displayNameConnections.Add(displayNameConnection);
+            //}
 
-            return View(displayNameConnections);
+            //return View(displayNameConnections);
+            return View();
+        }
+
+        public string GetDisplayNameFromEmail(string email) {
+            User u = identityContext.Users.FirstOrDefault(u => u.Email == email);
+            if (u == null) return "";
+
+            return u.DisplayName;
         }
     }
 }

@@ -21,10 +21,10 @@ namespace QuarantineConvo.Models {
         }
 
         public async Task SendMessage(string connectionString, string message) {
-            int connectionID = int.Parse(connectionString);
+            if (connectionString == "") return;
 
             string user = Context.User.Identity.Name;
-            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == connectionID);
+            Connection connection = db.Connection.FirstOrDefault(conn => conn.ID == Guid.Parse(connectionString));
             Message msg = new Message() {
                 Connection = connection,
                 Msg = message,
@@ -43,6 +43,17 @@ namespace QuarantineConvo.Models {
 
             ClientConnection clientConnection = db.ClientConnection.FirstOrDefault(c => c.UserName == toUser);
             await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", message, msg.ID);
+        }
+
+        public async Task ReadAllMessages(string connectionString) {
+            if (string.IsNullOrEmpty(connectionString)) return;
+
+            foreach(Message msg in db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionString))) {
+                msg.Read = true;
+                db.Message.Update(msg);
+            }
+
+            db.SaveChanges();
         }
 
         public async Task ReadMessage(int messageID) {
