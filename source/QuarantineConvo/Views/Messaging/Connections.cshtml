@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DisplayNameConnection>
+﻿@model IEnumerable<ConnectionList>
 @{
     ViewData["Title"] = "Connections";
 }
@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col mb-3">
-                @foreach (DisplayNameConnection c in Model) {
+                @foreach (ConnectionList c in Model) {
                     <div class="row">
                         <div class="card flex-grow-1">
                             <form id="@c.Connection.ID" class="card-body" method="get" asp-controller="Messaging" asp-action="Index">

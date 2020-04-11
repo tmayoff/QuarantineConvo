@@ -1,0 +1,38 @@
+﻿/*.connection:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}*/
+
+
+
+.sidebar {
+    width: 25%;
+}
+
+@media (max-width:992px) {
+    .sidebar {
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+        .sidebar.active {
+            margin-left: -100%;
+        }
+}
+
+.active-connection {
+    border: 1px solid black
+}
+
+#messages-template {
+    display: none !important;
+}
+
+.messages-scroll {
+    height: 0;
+    overflow-y: auto;
+}
+
+#message-template {
+    display: none !important;
+}

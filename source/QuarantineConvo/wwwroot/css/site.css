@@ -2,25 +2,6 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 /* Chips */
-.chip {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-    .chip input[type=checkbox] {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
 
 /* Messaging Page */
 
@@ -31,7 +12,6 @@ for details on configuring this project to bundle and minify static web assets. 
     margin-right: 10px;
     list-style-type: none;
     float: left;
-    max-width: 75%;
 }
 
     .message-left span {
@@ -41,6 +21,7 @@ for details on configuring this project to bundle and minify static web assets. 
         background-color: #CDF6E8;
         border-radius: 10px;
         float: left;
+        max-width: 75%;
     }
 
 .message-right {
@@ -49,7 +30,6 @@ for details on configuring this project to bundle and minify static web assets. 
     margin-right: 10px;
     list-style-type: none;
     float: right;
-    max-width: 75%;
 }
 
     .message-right span {
@@ -59,7 +39,12 @@ for details on configuring this project to bundle and minify static web assets. 
         background-color: #BCD9EC;
         border-radius: 10px;
         float: right;
+        max-width: 75%;
     }
+
+.message-input {
+
+}
 
 a.navbar-brand {
     white-space: normal;

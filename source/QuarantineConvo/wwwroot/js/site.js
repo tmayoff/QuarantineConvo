@@ -6,8 +6,8 @@
 var connectionEstablished = false;
 
 // Setup SignalR connection
-var connection = new signalR.HubConnectionBuilder().withUrl("/messaging-hub").build();
-connection.start().then(() => {
+var signalRConnection = new signalR.HubConnectionBuilder().withUrl("/messaging-hub").build();
+signalRConnection.start().then(() => {
     connectionEstablished = true;
 }).catch((err) => {
     return console.error(err.toString());
@@ -16,7 +16,7 @@ connection.start().then(() => {
 $(document).ready(() => {
 
     // Notifications
-    connection.on("ReceiveNotification", (msg) => {
+    signalRConnection.on("ReceiveNotification", (msg) => {
         console.log("Received notification");
 
         $.notify(msg);
@@ -27,11 +27,11 @@ $(document).ready(() => {
         //$('#notificationModel').modal('toggle')
     });
 
-    connection.on("ReceiveMessage", (msg, id) => {
+    signalRConnection.on("ReceiveMessage", (msg, id) => {
         if (typeof AddMessage === "function") {
             // On the messaging page
             AddMessage(msg)
-            connection.invoke("ReadMessage", id).catch((err) => {
+            signalRConnection.invoke("ReadMessage", id).catch((err) => {
                 console.error(err);
             });
         } else {
