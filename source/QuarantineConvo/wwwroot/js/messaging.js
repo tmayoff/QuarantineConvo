@@ -33,9 +33,9 @@ $(document).ready(() => {
         // Update active connection
         let currentConnection = $(".active-connection")
         if (currentConnection.length != 0) {
-            currentConnection.attr("class", currentConnection.attr("class").replace("active-connection", ""))
+            currentConnection.removeClass("active-connection")
         }
-        $(e.currentTarget).attr("class", $(e.currentTarget).attr("class") + " active-connection");
+        $(e.currentTarget).addClass("active-connection");
 
         FetchMessages();
 
@@ -57,17 +57,18 @@ function ToggleSidebar() {
 
 function FetchMessages() {
     let connection = $(".active-connection")
+    let connectionID = connection.data("id")
 
     let messagesContainer = $("#messages-container")
-    let messageContainer = $(`#messages-container-${connection.data("id")}`)
+    let messageContainer = $(`#messages-container-${connectionID}`)
     if (messageContainer.length == 0) {
         let template = $("#messages-template").clone();
-        $.post("/Messaging/GetMessagesContent", { connectionID: connection.data("id") })
+        $.post("/Messaging/GetMessagesContent", { connectionID: connection.data("id"), user: $("#username").text() })
             .done((data, status, jqXHR) => {
                 data = JSON.parse(data)
 
                 template.find("#messages-name").text(data.Username);
-                template.attr("id", `messages-container-${connection.data("id")}`)
+                template.attr("id", `messages-container-${connectionID}`)
                 messagesContainer.append(template);
 
                 $(".sidebar-toggle").on("click", () => {
@@ -86,17 +87,32 @@ function FetchMessages() {
                     }
                     messageTemplate.find("span").text(msg.Msg)
 
-                    let scroll = $(`#messages-container-${connection.data("id")}`).find(".messages-scroll")
+                    let scroll = $(`#messages-container-${connectionID}`).find(".messages-scroll")
                     scroll.append(messageTemplate);
                 })
 
-                UpdateScroll(connection.data("id"))
-                ReadAllMessages(connection.data("id"))
+                UpdateScroll(connectionID)
+                ReadAllMessages(connectionID)
 
             }).fail((jqXHR, status, error) => {
                 console.error(error)
             })
+    } else {
+        UpdateScroll(connectionID)
+        ReadAllMessages(connectionID)
     }
+
+    // Hide other windows
+    $(".connection-container").each((idx, obj) => {
+
+        if ($(obj).attr("id") != `messages-container-${connectionID}`) {
+            $(obj).removeClass("d-flex")
+            $(obj).addClass("d-none")
+        } else {
+            $(obj).removeClass("d-none")
+            $(obj).addClass("d-flex")
+        }
+    })
 }
 
 // Functions
@@ -132,11 +148,18 @@ function SendMessage() {
 
 }
 
-function AddMessage(message) {
-    console.log("Adding Message: " + message);
+function AddMessage(messageObj) {
+    messageObj = JSON.parse(messageObj);
+
+    let currentConnectionID = $(".active-connection").data("id")
+    let connectionID = messageObj.Connection.ID;
+    if (currentConnectionID != connectionID) {
+        let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
+        unreadDiv.removeClass("d-none");
+    }
 
     // Clean the message of dangerous strings
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var msg = messageObj.Msg.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     var encodedMsg = msg;
 
     // Create the message element
@@ -147,16 +170,18 @@ function AddMessage(message) {
     span.textContent = encodedMsg;
     li.appendChild(span);
 
-    document.getElementById("messages-list").appendChild(li);
+    $(`#messages-container-${connectionID}`).find(".messages-scroll").append(li)
 
-    UpdateScroll();
+    $(".active-connection").find(".last-received").text(encodedMsg)
+
+    UpdateScroll(connectionID);
     console.log("Adding Message: " + message);
 }
 
 function ReadAllMessages(connectionID) {
     signalRConnection.invoke("ReadAllMessages", connectionID).then(() => {
         let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
-        unreadDiv.attr("class", unreadDiv.attr("class").replace("unread", ""))
+        unreadDiv.addClass("d-none");
 
     }).catch((err) => {
         console.error(err);

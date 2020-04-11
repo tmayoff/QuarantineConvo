@@ -20,7 +20,13 @@ namespace QuarantineConvo.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("QuarantineConvoIdentityContextConnection")));
 
-                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<User>(
+                    options => {
+                        options.SignIn.RequireConfirmedAccount = false;
+
+                        options.Password.RequiredLength = 10;
+                        options.Password.RequireNonAlphanumeric = false;
+                    })
                     .AddEntityFrameworkStores<QuarantineConvoIdentityContext>();
             });
         }

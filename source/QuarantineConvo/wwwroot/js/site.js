@@ -27,18 +27,19 @@ $(document).ready(() => {
         //$('#notificationModel').modal('toggle')
     });
 
-    signalRConnection.on("ReceiveMessage", (msg, id) => {
+    signalRConnection.on("ReceiveMessage", (msg) => {
         if (typeof AddMessage === "function") {
             // On the messaging page
             AddMessage(msg)
-            signalRConnection.invoke("ReadMessage", id).catch((err) => {
-                console.error(err);
-            });
         } else {
             // Any where else on the site
             //$.notify("You received a message from someone");
+            msg = JSON.parse(msg)
             $.notify(
-                { title: "<strong>Message received:</strong>" },
+                {
+                    title: `<strong>Message received from ${msg.SentBy}:</strong>`,
+                    message: msg.Msg
+                },
                 { placement: { from: "bottom", align: "right" } });
         }
     });
