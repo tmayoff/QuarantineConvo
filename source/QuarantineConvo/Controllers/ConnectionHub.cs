@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using QuarantineConvo.Data;
 using System;
 using System.Collections.Generic;
@@ -42,10 +43,10 @@ namespace QuarantineConvo.Models {
                 toUser = connection.user1;
 
             ClientConnection clientConnection = db.ClientConnection.FirstOrDefault(c => c.UserName == toUser);
-            await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", message, msg.ID);
+            await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", JsonConvert.SerializeObject(new { msg.Connection, msg.Msg, SentBy = GetDisplayNameFromEmail(msg.SentBy) }));
         }
 
-        public async Task ReadAllMessages(string connectionString) {
+        public void ReadAllMessages(string connectionString) {
             if (string.IsNullOrEmpty(connectionString)) return;
 
             foreach(Message msg in db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionString))) {
@@ -65,8 +66,6 @@ namespace QuarantineConvo.Models {
 
         public async Task SendNotification(string toUserID, string message) {
             // Add to the database
-
-
             await Clients.User(toUserID).SendAsync("ReceiveNotification", message);
         }
 

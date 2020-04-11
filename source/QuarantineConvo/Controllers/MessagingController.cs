@@ -39,8 +39,8 @@ namespace QuarantineConvo.Controllers {
                 // Get their user object
                 User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-                bool containsUnread = db.Message.Any(m => m.Connection.ID == c.ID && !m.Read);
-                string lastMessage = db.Message.Where(m => m.Connection.ID == c.ID).OrderBy(m => m.TimeStamp).FirstOrDefault()?.Msg;
+                bool containsUnread = db.Message.Where(m => m.SentBy != User.Identity.Name).Any(m => m.Connection.ID == c.ID && !m.Read);
+                string lastMessage = db.Message.Where(m => m.Connection.ID == c.ID).OrderByDescending(m => m.TimeStamp).FirstOrDefault()?.Msg;
                 ConnectionList displayNameConnection = new ConnectionList() {
                     OtherUser = user,
                     Connection = c,
@@ -55,12 +55,14 @@ namespace QuarantineConvo.Controllers {
         }
 
         [HttpPost]
-        public string GetMessagesContent(string connectionID) {
+        public string GetMessagesContent(string connectionID, string user) {
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == Guid.Parse(connectionID));
             if (connection == null) return "";
 
+            string username = user == connection.user1 ? connection.user2 : connection.user1;
+
             List<Message> messages = db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionID)).OrderBy(m => m.TimeStamp).ToList();
-            return JsonConvert.SerializeObject(new { Username = GetDisplayNameFromEmail(connection.user1), messages });
+            return JsonConvert.SerializeObject(new { Username = GetDisplayNameFromEmail(username), messages });
         }
 
         [Authorize]
