@@ -12,8 +12,10 @@
 <span class="d-none" id="username">@User.Identity.Name</span>
 
 <div class="bg-light d-lg-flex flex-column border-right border-light p-3 sidebar">
+    <a class="btn btn-primary mb-2 shadow-sm" asp-action="FindConnection">Click here to find a new friend</a>
+
     @foreach (ConnectionList c in Model) {
-        <div class="card shadow-sm connection" id="connection-@c.Connection.ID" data-id="@c.Connection.ID">
+        <div class="card shadow-sm connection mb-2" id="connection-@c.Connection.ID" data-id="@c.Connection.ID">
             <div class="card-body d-flex flex-row flex-grow-1 align-items-center justify-content-xl-center">
                 <div class="flex-grow-1">
                     <h6>@c.OtherUser.DisplayName</h6>

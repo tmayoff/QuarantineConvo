@@ -24,6 +24,15 @@
     border: 1px solid black
 }
 
+.connection {
+    transition: all 0.3s;
+}
+
+    .connection:hover {
+        box-shadow: 0 .5rem .75rem rgba(0,0,0,.075) !important;
+        transition: all 0.3s;
+    }
+
 #messages-template {
     display: none !important;
 }
