@@ -6,7 +6,13 @@
 
 
 .sidebar {
+    border-right: 1px solid #c7c8c9 !important;
     width: 25%;
+}
+
+.sidebar-scroll {
+    height: 0;
+    overflow-y: auto;
 }
 
 @media (max-width:992px) {
@@ -24,6 +30,15 @@
     border: 1px solid black
 }
 
+.connection {
+    transition: all 0.3s;
+}
+
+    .connection:hover {
+        box-shadow: 0 .5rem .75rem rgba(0,0,0,.075) !important;
+        transition: all 0.3s;
+    }
+
 #messages-template {
     display: none !important;
 }
@@ -31,6 +46,10 @@
 .messages-scroll {
     height: 0;
     overflow-y: auto;
+}
+
+.messages-header {
+    border-bottom: 1px solid #c7c8c9 !important;
 }
 
 #message-template {

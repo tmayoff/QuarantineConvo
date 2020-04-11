@@ -13,6 +13,7 @@ $(document).ready(() => {
     $("#message-input").on("keydown", (e) => {
         if (e.keyCode == 13) e.preventDefault();
     })
+
     $("#message-input").on("keyup", (e) => {
         if (e.keyCode == 13) {
             SendMessage();
@@ -37,7 +38,16 @@ $(document).ready(() => {
         $(e.currentTarget).attr("class", $(e.currentTarget).attr("class") + " active-connection");
 
         FetchMessages();
+
+        $("#message-form").removeClass("d-none")
+        $("#message-form").addClass("d-flex")
     })
+
+    // Hide form
+    if ($(".active-connection").length == 0) {
+        $("#message-form").removeClass("d-flex")
+        $("#message-form").addClass("d-none")
+    }
 })
 
 function ToggleSidebar() {
@@ -64,10 +74,16 @@ function FetchMessages() {
                     ToggleSidebar();
                 })
 
+                let username = $("#username").text();
+
                 data.messages.forEach((msg) => {
                     let messageTemplate = $("#message-template").clone();
                     messageTemplate.attr("id", "")
-                    messageTemplate.attr("class", "message-right")
+                    if (username == msg.SentBy) {
+                        messageTemplate.addClass("message-right")
+                    } else {
+                        messageTemplate.addClass("message-left")
+                    }
                     messageTemplate.find("span").text(msg.Msg)
 
                     let scroll = $(`#messages-container-${connection.data("id")}`).find(".messages-scroll")
