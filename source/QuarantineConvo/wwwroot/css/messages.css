@@ -6,7 +6,13 @@
 
 
 .sidebar {
+    border-right: 1px solid #c7c8c9 !important;
     width: 25%;
+}
+
+.sidebar-scroll {
+    height: 0;
+    overflow-y: auto;
 }
 
 @media (max-width:992px) {
@@ -40,6 +46,10 @@
 .messages-scroll {
     height: 0;
     overflow-y: auto;
+}
+
+.messages-header {
+    border-bottom: 1px solid #c7c8c9 !important;
 }
 
 #message-template {
