@@ -2,12 +2,11 @@
 
 $(document).ready(() => {
 
-    // Sidebar stuff
+    // Setup event listeners
     $(".sidebar-toggle").on("click", () => {
         ToggleSidebar();
     })
 
-    // Setup event listeners
     $("#message-input").autogrow({ vertical: true, horizontal: false });
 
     $("#message-input").on("keydown", (e) => {
@@ -67,13 +66,12 @@ function FetchMessages() {
             .done((data, status, jqXHR) => {
                 data = JSON.parse(data)
 
-                template.find("#messages-name").text(data.Username);
+                template.find(".messages-hidden-name").text(data.Username);
+                $("#messages-name").text(data.Username);
+
                 template.attr("id", `messages-container-${connectionID}`)
                 messagesContainer.append(template);
 
-                $(".sidebar-toggle").on("click", () => {
-                    ToggleSidebar();
-                })
 
                 let username = $("#username").text();
 
@@ -100,6 +98,9 @@ function FetchMessages() {
                 console.error(error)
             })
     } else {
+        // Update name
+        $("#messages-name").text(messageContainer.find(".messages-hidden-name").text());
+
         UpdateScroll(connectionID)
         ReadAllMessages(connectionID)
         UpdateMessagesView(connectionID)
