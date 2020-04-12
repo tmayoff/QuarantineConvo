@@ -164,7 +164,7 @@ function AddMessage(messageObj) {
 
     $(`#messages-container-${connectionID}`).find(".messages-scroll").append(li)
 
-    $(".active-connection").find(".last-received").text(encodedMsg)
+    $(`#connection-${connectionID}`).find(".last-received").text(encodedMsg)
 
     UpdateScroll(connectionID);
     console.log("Adding Message: " + message);
