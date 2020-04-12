@@ -94,25 +94,16 @@ function FetchMessages() {
                 UpdateScroll(connectionID)
                 ReadAllMessages(connectionID)
 
+                UpdateMessagesView(connectionID)
+
             }).fail((jqXHR, status, error) => {
                 console.error(error)
             })
     } else {
         UpdateScroll(connectionID)
         ReadAllMessages(connectionID)
+        UpdateMessagesView(connectionID)
     }
-
-    // Hide other windows
-    $(".connection-container").each((idx, obj) => {
-
-        if ($(obj).attr("id") != `messages-container-${connectionID}`) {
-            $(obj).removeClass("d-flex")
-            $(obj).addClass("d-none")
-        } else {
-            $(obj).removeClass("d-none")
-            $(obj).addClass("d-flex")
-        }
-    })
 }
 
 // Functions
@@ -186,6 +177,20 @@ function ReadAllMessages(connectionID) {
     }).catch((err) => {
         console.error(err);
     });
+}
+
+function UpdateMessagesView(connectionID) {
+    // Hide other windows
+    $(".connection-container").each((idx, obj) => {
+
+        if ($(obj).attr("id") != `messages-container-${connectionID}`) {
+            $(obj).removeClass("d-flex")
+            $(obj).addClass("d-none")
+        } else {
+            $(obj).removeClass("d-none")
+            $(obj).addClass("d-flex")
+        }
+    })
 }
 
 function UpdateScroll(connectionID) {
