@@ -6,14 +6,67 @@
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+    
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<div class="">
-    <h1 class="display-4">Welcome</h1>
 
-    @if (SignInManager.IsSignedIn(User)) {
-        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
-    }
-    else {
-        <a class="btn btn-primary">Please Login</a>
-    }
-</div>
+    <div class="">
+        <h1 class="display-4">Welcome</h1>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
+
+            <br />
+            <button id="btnShowModal" type="button" class="btn btn-primary">
+                <i class="fas fa-question"></i>
+            </button>
+
+
+            <div class="modal fade" tabindex="-1" id="loginModal"
+                 data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            @*header*@
+                            <button type="button" class="close" data-dismiss="modal">
+                                ×
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @*body*@
+                        </div>
+                        <div class="modal-footer">
+                            @*footer*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        else
+        {
+            <a class="btn btn-primary">Please Login</a>
+        }
+    </div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+
+</script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#btnShowModal").click(function () {
+            $("#loginModal").modal('show');
+        });
+
+        $("#btnHideModal").click(function () {
+            $("#loginModal").modal('hide');
+        });
+    });
+</script>
