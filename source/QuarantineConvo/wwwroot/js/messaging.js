@@ -9,7 +9,7 @@ $(document).ready(() => {
         ToggleSidebar();
     })
 
-    $("#message-input").autogrow({ vertical: true, horizontal: false });
+    //$("#message-input").autogrow({ vertical: true, horizontal: false });
 
     $("#message-input").on("keydown", (e) => {
         if (e.keyCode == 13) e.preventDefault();
