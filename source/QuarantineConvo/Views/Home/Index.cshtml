@@ -7,13 +7,14 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-<div class="">
-    <h1 class="display-4">Welcome</h1>
+    <div class="">
+        <h1 class="display-4">Welcome</h1>
 
-    @if (SignInManager.IsSignedIn(User)) {
-        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
-    }
-    else {
-        <a class="btn btn-primary">Please Login</a>
-    }
-</div>
+        @if (SignInManager.IsSignedIn(User)) {
+            <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
+        }
+        else {
+            <a class="btn btn-primary">Please Login</a>
+        }
+
+    </div>
