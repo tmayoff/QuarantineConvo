@@ -46,16 +46,7 @@ namespace QuarantineConvo.Models {
             await Clients.User(clientConnection.UserID).SendAsync("ReceiveMessage", JsonConvert.SerializeObject(new { msg.Connection, msg.Msg, SentBy = GetDisplayNameFromEmail(msg.SentBy) }));
         }
 
-        public void ReadAllMessages(string connectionString) {
-            if (string.IsNullOrEmpty(connectionString)) return;
-
-            foreach(Message msg in db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionString))) {
-                msg.Read = true;
-                db.Message.Update(msg);
-            }
-
-            db.SaveChanges();
-        }
+        
 
         public async Task ReadMessage(int messageID) {
             Message msg = db.Message.First(m => m.ID == messageID);

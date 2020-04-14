@@ -1,5 +1,7 @@
 ﻿"use strict"
 
+
+
 $(document).ready(() => {
 
     // Setup event listeners
@@ -36,11 +38,13 @@ $(document).ready(() => {
         }
         $(e.currentTarget).addClass("active-connection");
 
-        FetchMessages();
+        UpdatedMessages();
 
         $("#message-form").removeClass("d-none")
         $("#message-form").addClass("d-flex")
     })
+
+    UpdatedMessages();
 
     // Hide form
     if ($(".active-connection").length == 0) {
@@ -49,19 +53,24 @@ $(document).ready(() => {
     }
 })
 
+// ---- Functions ----- //
+
+// Toggles the active class on the sidebar
 function ToggleSidebar() {
     let sidebar = $(".sidebar")
     sidebar.toggleClass("active");
 }
 
-function FetchMessages() {
+function UpdatedMessages() {
     let connection = $(".active-connection")
     let connectionID = connection.data("id")
+    if (connectionID === undefined) return;
 
     let messagesContainer = $("#messages-container")
     let messageContainer = $(`#messages-container-${connectionID}`)
     if (messageContainer.length == 0) {
         let template = $("#messages-template").clone();
+
         $.post("/Messaging/GetMessagesContent", { connectionID: connection.data("id"), user: $("#username").text() })
             .done((data, status, jqXHR) => {
                 data = JSON.parse(data)
@@ -107,7 +116,6 @@ function FetchMessages() {
     }
 }
 
-// Functions
 function SendMessage() {
     if (!connectionEstablished) return;
 
@@ -131,7 +139,7 @@ function SendMessage() {
         let scroll = $(`#messages-container-${connectionID}`).find(".messages-scroll")
         scroll.append(messageTemplate);
         //connection.find(".messages-scroll").append(messageTemplate);
-       
+
         $("#message-input").val("");
         UpdateScroll(connectionID);
     }).catch((err) => {
@@ -171,13 +179,21 @@ function AddMessage(messageObj) {
 }
 
 function ReadAllMessages(connectionID) {
-    signalRConnection.invoke("ReadAllMessages", connectionID).then(() => {
-        let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
-        unreadDiv.addClass("d-none");
+    $.post("/Messaging/ReadAllMessages", { connectionID: connectionID, user: $("#username").text() })
+        .done((data, status, jqXHR) => {
+            let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
+            unreadDiv.addClass("d-none");
+        }).fail((jqXHR, status, error) => {
+            console.error(error)
+        })
 
-    }).catch((err) => {
-        console.error(err);
-    });
+    //signalRConnection.invoke("ReadAllMessages", connectionID).then(() => {
+    //    let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
+    //    unreadDiv.addClass("d-none");
+
+    //}).catch((err) => {
+    //    console.error(err);
+    //});
 }
 
 function UpdateMessagesView(connectionID) {
