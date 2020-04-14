@@ -32,15 +32,20 @@ $(document).ready(() => {
     AskForNotificationPermissions();
 
     // Notifications
-    signalRConnection.on("ReceiveNotification", (msg) => {
+    signalRConnection.on("ReceiveNotification", (notification) => {
         console.log("Received notification");
 
-        $.notify(msg);
-        //$.notify({ title: "Notification", message: msg }, { position: bottom - right });
-
-        //$('#notificationModelLabel').html('New Notification!');
-        //$('#notificationModelContent').html(message);
-        //$('#notificationModel').modal('toggle')
+        $.notify(
+            {
+                title: `<strong>New Connection with</strong>`,
+                message: ""
+            },
+            {
+                url_target: "_self",
+                placement: { from: "bottom", align: "right" },
+                mouse_over: "pause",
+                template: notificationTemplate
+            });
     });
 
     signalRConnection.on("ReceiveMessage", (msg) => {
