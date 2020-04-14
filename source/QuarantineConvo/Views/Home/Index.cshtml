@@ -7,14 +7,16 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-    <div class="">
-        <h1 class="display-4">Welcome</h1>
+<div class="text-center">
+    <h1 class="display-4">Qurantine Convo</h1>
 
-        @if (SignInManager.IsSignedIn(User)) {
-            <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
-        }
-        else {
-            <a class="btn btn-primary">Please Login</a>
-        }
+    <p>A place to find people and make new friends during this tough time.<br>Find people with the same interests and spark up a conversation!</p>
 
-    </div>
+    @if (SignInManager.IsSignedIn(User)) {
+        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
+    }
+    else {
+        <a class="btn btn-primary">Please Login</a>
+        <a class="btn btn-primary">Or create an account</a>
+    }
+</div>
