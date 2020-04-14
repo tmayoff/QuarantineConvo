@@ -1,0 +1,37 @@
+﻿.interest-container .active {
+    background-color: green !important;
+}
+
+.interest-container {
+    display: flex;
+    align-content: center;
+    min-width: 65px;
+    border: 1px solid #c7c8c9 !important;
+    border-radius: 25px;
+    padding: 3px 10px;
+    background-color: #f8f9fa;
+    font-size: x-large;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+.interest-checkbox {
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+}
+
+.interest-label {
+    display: flex;
+    margin: 0;
+}
+
+.interest-container.interest-checked {
+    background-color: #8edd7c;
+    transition: all 0.3s;
+    border: none !important;
+}
+
+.interest-container:hover {
+    box-shadow: 0 .5rem .75rem rgba(0,0,0,.075) !important;
+}
