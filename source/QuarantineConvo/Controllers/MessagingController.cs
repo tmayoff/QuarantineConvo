@@ -29,7 +29,12 @@ namespace QuarantineConvo.Controllers {
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index(int connectionId) {
+        public IActionResult Index(string connectionID) {
+            Guid res = new Guid();
+            if (Guid.TryParse(connectionID, out res)) {
+                ViewData["active-connection"] = res;
+            }
+
             List<Connection> connections = db.Connection.Where(con => User.Identity.Name == con.user1 || User.Identity.Name == con.user2).ToList();
 
             List<ConnectionList> connectionListObjs = new List<ConnectionList>();
@@ -39,7 +44,7 @@ namespace QuarantineConvo.Controllers {
                 // Get their user object
                 User user = identityContext.Users.FirstOrDefault(u => u.Email == oUser);
 
-                bool containsUnread = db.Message.Where(m => m.SentBy != User.Identity.Name).Any(m => m.Connection.ID == c.ID && !m.Read);
+                bool containsUnread = db.Message.Where(m => m.Connection.ID == c.ID && m.SentBy != User.Identity.Name).Any(m => !m.Read);
                 string lastMessage = db.Message.Where(m => m.Connection.ID == c.ID).OrderByDescending(m => m.TimeStamp).FirstOrDefault()?.Msg;
                 ConnectionList displayNameConnection = new ConnectionList() {
                     OtherUser = user,
@@ -56,6 +61,7 @@ namespace QuarantineConvo.Controllers {
 
         [HttpPost]
         public string GetMessagesContent(string connectionID, string user) {
+            if (string.IsNullOrEmpty(connectionID) || string.IsNullOrEmpty(user)) return "";
             Connection connection = db.Connection.FirstOrDefault(c => c.ID == Guid.Parse(connectionID));
             if (connection == null) return "";
 
@@ -126,6 +132,18 @@ namespace QuarantineConvo.Controllers {
 
                 return RedirectToAction("Index", new { connectionId = theConnection.ID });
             }
+        }
+
+        [HttpPost]
+        public void ReadAllMessages(string connectionID) {
+            if (string.IsNullOrEmpty(connectionID)) return;
+
+            foreach (Message msg in db.Message.Where(m => m.Connection.ID == Guid.Parse(connectionID))) {
+                msg.Read = true;
+                db.Message.Update(msg);
+            }
+
+            db.SaveChanges();
         }
 
         private long GetInterests(List<string> interestCheckboxes) {

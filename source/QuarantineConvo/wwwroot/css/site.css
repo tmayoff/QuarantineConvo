@@ -1,11 +1,15 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-/* Chips */
-
-/* Messaging Page */
-
-
+/* Notifications */
+[data-notify="container"] {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid #c7c8c9;
+    padding: 10px;
+    margin: 5px;
+}
 
 
 a.navbar-brand {
