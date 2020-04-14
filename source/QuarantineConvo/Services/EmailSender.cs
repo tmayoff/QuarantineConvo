@@ -40,7 +40,7 @@ namespace QuarantineConvo.Services
             var client = new SmtpClient();
             
             client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("dummysimon99@gmail.com", "badPass123!");
+            client.Authenticate("quarantineconvo@gmail.com", "Stage2020");
             client.Send(theMessage);
             client.Disconnect(true);
 
