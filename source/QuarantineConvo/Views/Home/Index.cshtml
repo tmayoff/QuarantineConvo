@@ -9,47 +9,50 @@
     
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+   
+<div class="">
 
-    <div class="">
-        <h1 class="display-4">Welcome</h1>
-
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
-
-            <br />
-            <button id="btnShowModal" type="button" class="btn btn-primary">
-                <i class="fas fa-question"></i>
-            </button>
+    <h1 class="display-4">Welcome</h1>
 
 
-            <div class="modal fade" tabindex="-1" id="loginModal"
-                 data-keyboard="false" data-backdrop="static">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            @*header*@
-                            <button type="button" class="close" data-dismiss="modal">
-                                ×
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            @*body*@
-                        </div>
-                        <div class="modal-footer">
-                            @*footer*@
-                        </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a class="btn btn-primary" asp-controller="Messaging" asp-action="Index">Click here to get started</a>
+        <br />
+        <br />
+        <button id="btnShowModal" type="button" class="btn btn-primary">
+            <i class="fas fa-question"></i>
+        </button>
+
+        <div class="modal fade" tabindex="-1" id="loginModal"
+             data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        @*header*@
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <p>You are just one click away from getting to meet some new friendly strangers. Simply click the get started button.</p>
+                        <p> In the top right of your screen, you can click on your username to have access to your account information, or you click the logout button to safely logout from your account.</p>
+
+                    </div>
+                    @*<div class="modal-footer">
+                            footer
+                        </div>*@
                 </div>
             </div>
+        </div>
 
 
-        }
-        else
-        {
-            <a class="btn btn-primary">Please Login</a>
-        }
-    </div>
+    }
+    else
+    {
+        <a class="btn btn-primary">Please Login</a>
+    }
+</div>
 
 
 
