@@ -9,12 +9,9 @@ using QuarantineConvo.Data;
 using QuarantineConvo.Models;
 
 [assembly: HostingStartup(typeof(QuarantineConvo.Areas.Identity.IdentityHostingStartup))]
-namespace QuarantineConvo.Areas.Identity
-{
-    public class IdentityHostingStartup : IHostingStartup
-    {
-        public void Configure(IWebHostBuilder builder)
-        {
+namespace QuarantineConvo.Areas.Identity {
+    public class IdentityHostingStartup : IHostingStartup {
+        public void Configure(IWebHostBuilder builder) {
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<QuarantineConvoIdentityContext>(options =>
                     options.UseSqlServer(
@@ -27,6 +24,7 @@ namespace QuarantineConvo.Areas.Identity
                         options.Password.RequiredLength = 10;
                         options.Password.RequireNonAlphanumeric = false;
                     })
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<QuarantineConvoIdentityContext>();
             });
         }

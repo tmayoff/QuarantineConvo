@@ -1,0 +1,67 @@
+﻿@model RoleEdit
+
+<div>
+    <div class="d-flex flex-column justify-content-center align-items-center" style="margin: 15px;">
+        <h2 class="text-center">Update Role</h2>
+        <a asp-action="Index" class="btn btn-primary" type="button">Back</a>
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+
+    <form method="post">
+        <div class="d-flex flex-grow-1 justify-content-center" style="margin: 10px;">
+            <div class="card" style="margin: 10px;">
+                <div class="card-body">
+                    <h4 class="card-title">Add to Admin</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @if (Model.NonMembers.Count() == 0) {
+                                    <tr><td colspan="2">All Users Are Members</td></tr>
+                                }
+                                else {
+                                    @foreach (User user in Model.NonMembers) {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>
+                                                <input type="checkbox" name="AddIds" value="@user.Id">
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin: 10px;">
+                <div class="card-body">
+                    <h4 class="card-title">Remove from Admin</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @if (Model.Members.Count() == 0) {
+                                    <tr><td colspan="2">No Users Are Members</td></tr>
+                                }
+                                else {
+                                    @foreach (User user in Model.Members) {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>
+                                                <input type="checkbox" name="DeleteIds" value="@user.Id">
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="roleName" value="@Model.Role.Name" />
+        <input type="hidden" name="roleId" value="@Model.Role.Id" />
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
