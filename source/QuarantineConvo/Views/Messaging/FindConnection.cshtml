@@ -20,12 +20,22 @@
                 <div class="d-flex justify-content-center form-row" style="margin-bottom: 10px;">
                     @foreach (Interest interest in Model)
                     {
-                        <label class="shadow-sm d-flex justify-content-center interest-container">
-                            <input type="checkbox" name="interestCheckboxes" class="interest-checkbox" value="@interest.Name">
-                            <span>@interest.Name</span>
-                        </label>
+                        @if ((((long)ViewData["InterestBitmask"]) & (1 << (int)interest.Position)) != 0)
+                        {
+                            <label class="shadow-sm d-flex justify-content-center interest-container interest-checked">
+                                <input type="checkbox" name="interestCheckboxes" class="interest-checkbox" value="@interest.Name" checked>
+                                <span>@interest.Name</span>
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="shadow-sm d-flex justify-content-center interest-container">
+                                <input type="checkbox" name="interestCheckboxes" class="interest-checkbox" value="@interest.Name">
+                                <span>@interest.Name</span>
+                            </label>
+                        }
                     }
-                </div>
+                    </div>
                 <div class="form-row">
                     <input type="submit" class="btn btn-primary" id="submit_button" />
                 </div>
