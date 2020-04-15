@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QuarantineConvo.Data;
 using QuarantineConvo.Models;
+using System.Threading;
 
 namespace QuarantineConvo.Controllers {
     public class MessagingController : Controller {
@@ -79,7 +80,7 @@ namespace QuarantineConvo.Controllers {
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Search(List<string> interestCheckboxes) {
+        public async Task<string> Search(List<string> interestCheckboxes) {
             string currentUser = User.Identity.Name;
             long currentInterests = GetInterests(interestCheckboxes);
 
@@ -93,10 +94,21 @@ namespace QuarantineConvo.Controllers {
 
             searchRequests.Add(request);
 
-            SearchRequest foundUser = db.SearchRequest.FirstOrDefault(r => (r.Interests & currentInterests) != 0 && r.Username != currentUser);
+            List<string> usersMatches = new List<string>();
+
+            foreach(Connection connection in db.Connection)
+            {
+                if (connection.user1 == currentUser)
+                    usersMatches.Add(connection.user2);
+
+                else if(connection.user2 == currentUser)
+                    usersMatches.Add(connection.user1);
+            }
+
+            SearchRequest foundUser = db.SearchRequest.FirstOrDefault(r => (r.Interests & currentInterests) != 0 && r.Username != currentUser && !usersMatches.Contains(r.Username));
 
             if (null == foundUser) {
-                return RedirectToAction("FindConnection");
+                return "You're connection request has been processed and added.";
             }
 
             else {
@@ -130,7 +142,7 @@ namespace QuarantineConvo.Controllers {
 
                 await SendNewConnection(theConnection.ID);
 
-                return RedirectToAction("Index", new { connectionId = theConnection.ID });
+                return "EMPTY";
             }
         }
 
@@ -188,6 +200,16 @@ namespace QuarantineConvo.Controllers {
 
             await hubContext.Clients.User(clientConnection_1.UserID).SendAsync("ReceiveNotification", message_1);
             await hubContext.Clients.User(clientConnection_2.UserID).SendAsync("ReceiveNotification", message_2);
+        }
+
+        public async Task NotifyConnectionRequestReceived(string user)
+        {
+            Thread.Sleep(1000);
+
+            ClientConnection clientConnection = db.ClientConnection.FirstOrDefault(c => c.UserName == user);
+            string message = "You're connection request has been processed and added.";
+
+            await hubContext.Clients.User(clientConnection.UserID).SendAsync("ReceiveNotification", message);
         }
 
         public IActionResult Connections() {

@@ -3,32 +3,32 @@
     ViewData["Title"] = "Find A Connection";
 }
 
-<div class="container">
+    <div class="container">
 
-    <link rel="stylesheet" href="~/css/find_connection.css" />
-    <script src="~/js/find_connection.js" asp-append-version="true"></script>
+        <link rel="stylesheet" href="~/css/find_connection.css" />
+        <script src="~/js/find_connection.js" asp-append-version="true"></script>
 
-    <div class="p-5 text-center">
-        <h1>Trying to find that connection you long-for?</h1>
-        <h2>We've got you covered!</h2>
-        <br />
-        <h5>Pick from among the list of interests the ones that you wish to talk about and we will get you connected to another person somewhere in this world that is looking for the same conversation. :)</h5>
+        <div class="p-5 text-center">
+            <h1>Trying to find that connection you long-for?</h1>
+            <h2>We've got you covered!</h2>
+            <br />
+            <h5>Pick from among the list of interests the ones that you wish to talk about and we will get you connected to another person somewhere in this world that is looking for the same conversation. :)</h5>
+        </div>
+
+        <div class="d-flex flex-grow-1 justify-content-center">
+            <form class="d-flex flex-column align-items-center justify-content-sm-center" style="width: 75%;" onSubmit="JavaScript:ProcessRequest()">
+                <div class="d-flex justify-content-center form-row" style="margin-bottom: 10px;">
+                    @foreach (Interest interest in Model)
+                    {
+                        <label class="shadow-sm d-flex justify-content-center interest-container">
+                            <input type="checkbox" name="interestCheckboxes" class="interest-checkbox" value="@interest.Name">
+                            <span>@interest.Name</span>
+                        </label>
+                    }
+                </div>
+                <div class="form-row">
+                    <input type="submit" class="btn btn-primary" id="submit_button" />
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="d-flex flex-grow-1 justify-content-center">
-        <form class="d-flex flex-column align-items-center justify-content-sm-center" style="width: 75%;" asp-action="Search">
-            <div class="d-flex justify-content-center form-row" style="margin-bottom: 10px;">
-                @foreach (Interest interest in Model)
-                {
-                    <label class="shadow-sm d-flex justify-content-center interest-container">
-                        <input type="checkbox" name="interestCheckboxes" class="interest-checkbox" value="@interest.Name">
-                        <span>@interest.Name</span>
-                    </label>
-                }
-            </div>
-            <div class="form-row">
-                <input type="submit" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
