@@ -1,0 +1,19 @@
+﻿@model string
+
+<div>
+
+    <div class="d-flex flex-column justify-content-center align-items-center" style="margin: 15px;">
+        <h2 class="text-center">Create a Role</h2>
+        <a asp-action="Index" class="btn btn-primary" type="button">Back</a>
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input name="name" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+
+</div>
