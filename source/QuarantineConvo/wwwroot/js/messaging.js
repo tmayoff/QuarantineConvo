@@ -181,13 +181,19 @@ function AddMessage(messageObj) {
 function ReadAllMessages(connectionID) {
     $.post("/Messaging/ReadAllMessages", { connectionID: connectionID, user: $("#username").text() })
         .done((data, status, jqXHR) => {
-
             let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
             unreadDiv.addClass("d-none");
-
         }).fail((jqXHR, status, error) => {
             console.error(error)
         })
+
+    //signalRConnection.invoke("ReadAllMessages", connectionID).then(() => {
+    //    let unreadDiv = $(`#connection-${connectionID}`).find(".unread");
+    //    unreadDiv.addClass("d-none");
+
+    //}).catch((err) => {
+    //    console.error(err);
+    //});
 }
 
 function UpdateMessagesView(connectionID) {
