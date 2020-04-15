@@ -33,7 +33,6 @@ $(document).ready(() => {
 
     // Notifications
     signalRConnection.on("ReceiveNotification", (notification) => {
-        console.log("Received notification");
 
         $.notify(
             {
