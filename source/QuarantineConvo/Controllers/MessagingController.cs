@@ -73,8 +73,9 @@ namespace QuarantineConvo.Controllers {
         }
 
         [Authorize]
-        public IActionResult FindConnection(string message) {
+        public IActionResult FindConnection() {
             var interests = db.Interest.ToList();
+            ViewData["InterestBitmask"] = identityContext.Users.FirstOrDefault(u => u.Email == User.Identity.Name).InterestBitmask;
             return View(interests);
         }
 
@@ -88,6 +89,12 @@ namespace QuarantineConvo.Controllers {
                 Username = currentUser,
                 Interests = currentInterests
             };
+
+            // Update the user's selection
+            User user = identityContext.Users.FirstOrDefault(u => u.Email == currentUser);
+            user.InterestBitmask = currentInterests;
+            identityContext.Users.Update(user);
+            identityContext.SaveChanges();
 
             db.SearchRequest.Add(request);
             db.SaveChanges();
@@ -110,7 +117,6 @@ namespace QuarantineConvo.Controllers {
             if (null == foundUser) {
                 return "You're connection request has been processed and added.";
             }
-
             else {
                 long commonInterests = foundUser.Interests & currentInterests;
 
